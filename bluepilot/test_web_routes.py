@@ -17,7 +17,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 # Mock Params if not available
 try:
-    from common.params import Params
+    from openpilot.common.params import Params
 except ImportError:
     print("Warning: Could not import Params, using mock")
 
@@ -51,11 +51,11 @@ except ImportError:
 
     # Replace in sys.modules
     import types
-    common = types.ModuleType('common')
-    common.params = types.ModuleType('params')
-    common.params.Params = MockParams
-    sys.modules['common'] = common
-    sys.modules['common.params'] = common.params
+    openpilot_common = types.ModuleType('openpilot.common')
+    openpilot_common.params = types.ModuleType('openpilot.common.params')
+    openpilot_common.params.Params = MockParams
+    sys.modules['openpilot.common'] = openpilot_common
+    sys.modules['openpilot.common.params'] = openpilot_common.params
 
 # Now import the server
 if __name__ == '__main__':
