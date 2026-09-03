@@ -60,7 +60,7 @@ Ford lateral, longitudinal, safety limits, ALP, radar behavior, fingerprinting, 
 
 The branch is development-only while Sunny's model publication is incomplete. The current Sunny workflow compiled and uploaded its temporary big-model artifact, but `upload_defaults` failed at `Upload model to HF`; therefore no comma-four installation is authorized from this branch yet.
 
-Pushing the branch is allowed only after host verification succeeds. Advertising or using its installer URL additionally requires a coherent Sunny source/staging/model tuple: the staged commit must record the pinned-or-newer Sunny source, all source tests and Chestnut compilation jobs must pass, and public model upload plus integrity verification must succeed.
+Pushing the branch is allowed only after host verification succeeds. Advertising or using its installer URL additionally requires a coherent Sunny source/staging/model tuple: the staged commit must record exactly the Sunny source incorporated by this branch (merge a newer recorded source first if necessary), all source tests and Chestnut compilation jobs must pass, and public model upload plus integrity verification must succeed.
 
 The existing installer for `codex/chestnut-personal@1f4ec371` and current BluePilot `bp-dev` remain rollback references. Nothing updates `bp-dev`, `bp-7.0`, or the original personal branch.
 
