@@ -118,18 +118,34 @@ PATH="$PWD/.venv/bin:$PATH" pytest -q \
 # exit 0; 56 passed, 16 subtests passed, 0 failed, 0 skipped in 0.84s
 ```
 
-The full Ford safety suite is an inherited failure set. Raw pytest output was
-captured before normalization in each worktree:
+The full Ford safety suite is an inherited failure set. The following raw
+capture blocks were each executed as a separate shell in the stated worktree.
+They redirect both pytest streams first, save pytest's immediate exit code to a
+sidecar before any normalization, then propagate that expected nonzero code to
+the invoking shell:
 
 ```bash
-cd /Users/alex/Apps/bluepilot-chestnut-personal
-PATH="$PWD/.venv/bin:$PATH" pytest -q -rfE opendbc_repo/opendbc/safety/tests/test_ford.py
-# exit 1; 22759 failed, 474 passed, 285 skipped, 1756 subtests passed in 240.42s (0:04:00)
+PATH="$PWD/.venv/bin:$PATH" pytest -q -rfE opendbc_repo/opendbc/safety/tests/test_ford.py > /tmp/task5-fix1-original-safety-raw.txt 2>&1
+pytest_exit=$?
+printf '%s\n' "$pytest_exit" > /tmp/task5-fix1-original-safety-exit.txt
+exit "$pytest_exit"
+```
 
-cd /Users/alex/Apps/bluepilot-chestnut-personal-2
-PATH="$PWD/.venv/bin:$PATH" pytest -q -rfE opendbc_repo/opendbc/safety/tests/test_ford.py
-# exit 1; 22759 failed, 474 passed, 285 skipped, 1756 subtests passed in 252.29s (0:04:12)
+Executed in `/Users/alex/Apps/bluepilot-chestnut-personal`: exit `1`; `22759
+failed, 474 passed, 285 skipped, 1756 subtests passed in 240.42s (0:04:00)`.
 
+```bash
+PATH="$PWD/.venv/bin:$PATH" pytest -q -rfE opendbc_repo/opendbc/safety/tests/test_ford.py > /tmp/task5-fix1-candidate-safety-raw.txt 2>&1
+pytest_exit=$?
+printf '%s\n' "$pytest_exit" > /tmp/task5-fix1-candidate-safety-exit.txt
+exit "$pytest_exit"
+```
+
+Executed in `/Users/alex/Apps/bluepilot-chestnut-personal-2`: exit `1`;
+`22759 failed, 474 passed, 285 skipped, 1756 subtests passed in 252.29s
+(0:04:12)`.
+
+```bash
 sed -E 's/ in [0-9.]+s( \([0-9:]+\))?//' /tmp/task5-fix1-original-safety-raw.txt > /tmp/task5-fix1-original-safety-normalized.txt
 sed -E 's/ in [0-9.]+s( \([0-9:]+\))?//' /tmp/task5-fix1-candidate-safety-raw.txt > /tmp/task5-fix1-candidate-safety-normalized.txt
 diff -u /tmp/task5-fix1-original-safety-normalized.txt /tmp/task5-fix1-candidate-safety-normalized.txt
