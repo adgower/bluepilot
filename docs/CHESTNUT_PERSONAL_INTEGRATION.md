@@ -60,19 +60,86 @@ claim.
 
 ## Host verification evidence
 
-Task 4 completed `git lfs pull` and `git lfs fsck` successfully. Sunny model
-tests reported 53 passed, 1 skipped; `modeld_v2` reported 100 passed, 1
-skipped. Six submodule pins are listed in the source tuple.
+Task 4 completed `git lfs pull` and `git lfs fsck` successfully. The complete
+Sunny model suites ran as follows (both exit 0):
 
-Task 5's exact Step 1 result after the test-only spawn-safe commit
-`d3fdabbd` was 363 passed, 1 skipped, with no warnings. Backend direct scripts
-passed (8 import groups and 5 module checks), and the real `GET /api/status`
-portal smoke passed. Focused Ford verification reported 56 passed plus 16
-subtests. The full Ford safety matrix is inherited and failing: 22,759 failed,
-474 passed, 285 skipped, and 1,756 subtests. Its raw exit was 1 for both the
-candidate and original `1f4ec371`; after elapsed-time-only normalization the
-complete failure text was byte-identical. The differential gate passes; the
-safety suite does not pass.
+```bash
+PATH="$PWD/.venv/bin:$PATH" pytest -q openpilot/sunnypilot/models/tests
+# 53 passed, 1 skipped in 11.49s
+
+PATH="$PWD/.venv/bin:$PATH" pytest -q openpilot/sunnypilot/modeld_v2/tests
+# 100 passed, 1 skipped in 5.47s
+```
+
+Six submodule pins are listed in the source tuple. The initial collection
+attempts required standard ignored host build products; the final commands
+above are the binding results.
+
+After the test-only spawn-safe commit `d3fdabbd`, Task 5's exact stock-launcher
+Step 1 command passed cleanly:
+
+```bash
+PATH="$PWD/.venv/bin:$PATH" pytest -q openpilot/cereal/messaging/tests openpilot/common/tests/test_params.py openpilot/sunnypilot/system/tests/test_params_migration.py openpilot/system/manager/test/test_manager.py
+# exit 0; 363 passed, 1 skipped in 3.66s; no warnings
+
+PATH="$PWD/.venv/bin:$PATH" python -m compileall -q bluepilot openpilot/selfdrive/ui/bp openpilot/sunnypilot
+# exit 0; no output or import-compilation errors
+```
+
+The backend boolean checks were run through their direct-script entrypoints,
+rather than relying on their earlier pytest collection behavior:
+
+```bash
+PATH="$PWD/.venv/bin:$PATH" python bluepilot/backend/test_backend_import.py
+# exit 0; all eight import groups successful
+
+PATH="$PWD/.venv/bin:$PATH" python bluepilot/backend/test_modules_only.py
+# exit 0; Tests passed: 5; Tests failed: 0
+
+PATH="$PWD/.venv/bin:$PATH" python /tmp/task5-fix1-portal-smoke.py
+# GET http://127.0.0.1:57042/api/status -> 200
+# PORTAL_SMOKE_PASS child_exit=0; process exit 0
+```
+
+The last command is a bounded, disposable `/tmp` harness, not a committed
+repository test or durable repository artifact. It used the real HTTP server
+and handler, a disposable Params root, a loopback ephemeral port, and only the
+safe `GET /api/status` endpoint.
+
+Focused Ford behavior was verified with:
+
+```bash
+PATH="$PWD/.venv/bin:$PATH" pytest -q \
+  opendbc_repo/opendbc/sunnypilot/car/ford/tests/test_carstate_ext.py \
+  opendbc_repo/opendbc/sunnypilot/car/ford/tests/test_lateral_angle_ext.py \
+  opendbc_repo/opendbc/sunnypilot/car/ford/tests/test_lane_center_trim.py \
+  opendbc_repo/opendbc/sunnypilot/car/ford/tests/test_vin_fingerprint.py \
+  opendbc_repo/opendbc/car/ford/tests/test_ford.py
+# exit 0; 56 passed, 16 subtests passed, 0 failed, 0 skipped in 0.84s
+```
+
+The full Ford safety suite is an inherited failure set. Raw pytest output was
+captured before normalization in each worktree:
+
+```bash
+cd /Users/alex/Apps/bluepilot-chestnut-personal
+PATH="$PWD/.venv/bin:$PATH" pytest -q -rfE opendbc_repo/opendbc/safety/tests/test_ford.py
+# exit 1; 22759 failed, 474 passed, 285 skipped, 1756 subtests passed in 240.42s (0:04:00)
+
+cd /Users/alex/Apps/bluepilot-chestnut-personal-2
+PATH="$PWD/.venv/bin:$PATH" pytest -q -rfE opendbc_repo/opendbc/safety/tests/test_ford.py
+# exit 1; 22759 failed, 474 passed, 285 skipped, 1756 subtests passed in 252.29s (0:04:12)
+
+sed -E 's/ in [0-9.]+s( \([0-9:]+\))?//' /tmp/task5-fix1-original-safety-raw.txt > /tmp/task5-fix1-original-safety-normalized.txt
+sed -E 's/ in [0-9.]+s( \([0-9:]+\))?//' /tmp/task5-fix1-candidate-safety-raw.txt > /tmp/task5-fix1-candidate-safety-normalized.txt
+diff -u /tmp/task5-fix1-original-safety-normalized.txt /tmp/task5-fix1-candidate-safety-normalized.txt
+# exit 0; no output
+```
+
+The elapsed-time-only normalized failure text was byte-identical. This passes
+the differential regression gate only; it is not an absolute Ford safety pass.
+The `/tmp` capture and comparison files are ephemeral evidence, not durable
+repository artifacts.
 
 Task 6 ran exactly:
 
