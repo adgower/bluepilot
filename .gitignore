@@ -104,3 +104,9 @@ SKILL.md
 !.idea/customTargets.xml
 !.idea/tools/*
 !.run/*
+
+### BluePilot: local agent docs/tools (gitignored) ###
+bluepilot/agent_info/
+bluepilot/agent_tools/
+bluepilot/local_files/
+tools/jotpluggler/layouts/Path_Angle_Analysis.json

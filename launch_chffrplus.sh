@@ -4,6 +4,9 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 
 source "$DIR/launch_env.sh"
 
+# BluePilot: set boot and logo images (non-interactive, safe to call repeatedly)
+"$DIR/scripts/boot_logo.sh" --headless --update --force --quiet
+
 function agnos_init {
   # TODO: move this to agnos
   sudo rm -f /data/etc/NetworkManager/system-connections/*.nmmeta
@@ -27,6 +30,22 @@ function agnos_init {
     while true; do
       $DIR/openpilot/common/hardware/comma/updater $AGNOS_PY $MANIFEST
     done
+  fi
+}
+
+function fix_egl_adreno {
+  # BluePilot: comma's on-screen URL installer points the GPU EGL/GLES libs at the Adreno
+  # drivers. ford-op/BluePilot installs by git clone (private repo), which skips that
+  # installer, so ldconfig's higher-versioned glvnd/Mesa libs win and magic.service (the
+  # AGNOS display server) fails eglGetDisplay -> no UI. Re-point them like the installer does.
+  local lib=/usr/lib/aarch64-linux-gnu
+  if [ "$(readlink $lib/libEGL.so.1)" != "libEGL.so.1.0.0" ] || \
+     [ "$(readlink $lib/libGLESv2.so.2)" != "libGLESv2.so.2.0.0" ]; then
+    sudo mount -o remount,rw /
+    sudo ln -sf libEGL.so.1.0.0 "$lib/libEGL.so.1"
+    sudo ln -sf libGLESv2.so.2.0.0 "$lib/libGLESv2.so.2"
+    sudo mount -o remount,ro /
+    sudo systemctl restart magic.service 2>/dev/null || true
   fi
 }
 
@@ -83,6 +102,7 @@ function launch {
   # hardware specific init
   if [ -f /AGNOS ]; then
     agnos_init
+    fix_egl_adreno
   fi
 
   # write tmux scrollback to a file
@@ -91,7 +111,9 @@ function launch {
   # start manager
   cd openpilot/system/manager
   if [ ! -f $DIR/prebuilt ]; then
-    ./build.py
+    # BluePilot: verbose build UI (progress + live scons line + failure log). Falls back to the
+    # stock build if bp_build.py can't start, so a UI bug can't leave the device unable to build.
+    ./bp_build.py || ./build.py
   fi
   ./manager.py
 
