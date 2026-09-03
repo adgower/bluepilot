@@ -5,7 +5,10 @@ This file is part of sunnypilot and is licensed under the MIT License.
 See the LICENSE.md file in the root directory for more details.
 """
 from openpilot.selfdrive.ui.mici.layouts.settings import settings as OP
-from openpilot.selfdrive.ui.mici.widgets.button import BigButton
+from openpilot.selfdrive.ui.mici.layouts.settings.settings import SettingsBigButton
+from openpilot.selfdrive.ui.mici.layouts.settings.device import DeviceLayoutMici
+from openpilot.selfdrive.ui.mici.widgets.button import BigCircleButton
+from openpilot.selfdrive.ui.mici.widgets.dialog import BigConfirmationDialog, BigDialog
 from openpilot.selfdrive.ui.sunnypilot.mici.layouts.sunnylink import SunnylinkLayoutMici
 from openpilot.selfdrive.ui.sunnypilot.mici.layouts.models import ModelsLayoutMici
 from openpilot.selfdrive.ui.ui_state import ui_state
@@ -19,6 +22,7 @@ if is_bluepilot():
   from openpilot.selfdrive.ui.bp.mici.layouts.settings.bluepilot import BluePilotLayoutMici
 
 ICON_SIZE = 70
+BIG_ICON_SIZE = 110
 
 
 class SunnylinkBigButton(SettingsBigButton):
@@ -52,6 +56,20 @@ class SettingsLayoutSP(OP.SettingsLayout):
     models_btn = SettingsBigButton(tr("models"), "", gui_app.texture("../../sunnypilot/selfdrive/assets/offroad/icon_models.png", ICON_SIZE, ICON_SIZE))
     models_btn.set_click_callback(lambda: gui_app.push_widget(models_panel))
 
+    # onroad: enable button sits at the front (left of toggles)
+    self._enable_offroad_btn_onroad = BigCircleButton(self.icon_offroad_enable, red=True)
+    self._enable_offroad_btn_onroad.set_click_callback(lambda: self._handle_always_offroad(True))
+    self._enable_offroad_btn_onroad.set_visible(lambda: ui_state.started and not ui_state.always_offroad)
+
+    # offroad: enable button sits at the end (right of developer)
+    self._enable_offroad_btn_offroad = BigCircleButton(self.icon_offroad_enable, red=True)
+    self._enable_offroad_btn_offroad.set_click_callback(lambda: self._handle_always_offroad(True))
+    self._enable_offroad_btn_offroad.set_visible(lambda: not ui_state.started and not ui_state.always_offroad)
+
+    self._disable_offroad_btn = BigCircleButton(self.icon_offroad_disable, red=False)
+    self._disable_offroad_btn.set_click_callback(lambda: self._handle_always_offroad(False))
+    self._disable_offroad_btn.set_visible(lambda: ui_state.always_offroad)
+
     items = self._scroller._items.copy()
 
     items.insert(1, models_btn)
@@ -65,6 +83,33 @@ class SettingsLayoutSP(OP.SettingsLayout):
 
       items.insert(4, bluepilot_btn)
 
+    # SunnyPilot always-offroad controls retain their current placement.
+    items.insert(0, self._enable_offroad_btn_onroad)
+    items.insert(0, self._disable_offroad_btn)
+    items.append(self._enable_offroad_btn_offroad)
+
     self._scroller._items.clear()
     for item in items:
       self._scroller.add_widget(item)
+
+  def _update_state(self):
+    super()._update_state()
+
+  def _handle_always_offroad(self, enable: bool):
+
+    def _set_offroad_status(status: bool):
+      if not ui_state.engaged:
+        ui_state.params.put_bool("OffroadMode", status)
+        ui_state.always_offroad = status
+
+    if not enable:
+      dlg = BigConfirmationDialog(tr("slide to exit always offroad"), self.icon_offroad_slider, red=False,
+                                  confirm_callback=lambda: _set_offroad_status(False))
+    else:
+      if ui_state.engaged:
+        gui_app.push_widget(BigDialog(tr("disengage to enable always offroad"), "", ))
+        return
+
+      dlg = BigConfirmationDialog(tr("slide to force offroad"), self.icon_offroad_slider, red=True,
+                                  confirm_callback=lambda: _set_offroad_status(True))
+    gui_app.push_widget(dlg)

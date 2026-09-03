@@ -9,6 +9,7 @@ from openpilot.selfdrive.ui.onroad.augmented_road_view import AugmentedRoadView
 from openpilot.selfdrive.ui.ui_state import device, ui_state
 from openpilot.system.ui.widgets import Widget
 from openpilot.selfdrive.ui.layouts.onboarding import OnboardingWindow
+from openpilot.selfdrive.ui.body.layouts.onroad import BodyLayout
 
 # BluePilot: override sidebar, home layout, onroad overlays, and add debug panel
 from openpilot.common.bluepilot import is_bluepilot
@@ -42,9 +43,14 @@ class MainLayout(Widget):
     self._current_mode = MainState.HOME
     self._prev_onroad = False
 
-    # Initialize layouts
-    # BluePilot: comma body is not a BluePilot target; retain the BP home and onroad overrides.
-    self._layouts = {MainState.HOME: HomeLayout(), MainState.SETTINGS: SettingsLayout(), MainState.ONROAD: AugmentedRoadView()}
+    # Initialize layouts. BluePilot overrides the car layouts only; Body stays upstream.
+    self._home_layout = HomeLayout()
+    self._home_body_layout = BodyLayout()
+    self._layouts: dict[MainState, Widget] = {
+      MainState.HOME: self._home_layout,
+      MainState.SETTINGS: SettingsLayout(),
+      MainState.ONROAD: AugmentedRoadView(),
+    }
 
     self._sidebar_rect = rl.Rectangle(0, 0, 0, 0)
     self._content_rect = rl.Rectangle(0, 0, 0, 0)
@@ -83,8 +89,11 @@ class MainLayout(Widget):
     if is_bluepilot() and hasattr(self._layouts[MainState.HOME], 'set_model_settings_callback'):
       self._layouts[MainState.HOME].set_model_settings_callback(lambda: self.open_settings(PanelType.MODELS))
     self._layouts[MainState.SETTINGS].set_callbacks(on_close=self._set_mode_for_state)
-    self._layouts[MainState.ONROAD].set_click_callback(self._on_onroad_clicked)
+    for layout in (self._layouts[MainState.ONROAD], self._home_body_layout):
+      layout.set_click_callback(self._on_onroad_clicked)
+
     device.add_interactive_timeout_callback(self._set_mode_for_state)
+    ui_state.add_on_body_changed_callbacks(self._on_body_changed)
 
   def _update_layout_rects(self):
     self._sidebar_rect = rl.Rectangle(self._rect.x, self._rect.y, SIDEBAR_WIDTH, self._rect.height)
@@ -99,6 +108,12 @@ class MainLayout(Widget):
       self._set_mode_for_state()
 
   def _set_mode_for_state(self):
+    # Body uses its home layout while started; ignition controls sidebar visibility.
+    if ui_state.is_body:
+      self._set_current_layout(MainState.HOME)
+      self._sidebar.set_visible(not ui_state.ignition)
+      return
+
     if ui_state.started:
       # Don't hide sidebar from interactive timeout
       if self._current_mode != MainState.ONROAD:
@@ -132,6 +147,10 @@ class MainLayout(Widget):
     if is_bluepilot() and (self._debug_toggled_this_frame or self._debug_panel.is_panel_visible):
       return
     self._sidebar.set_visible(not self._sidebar.is_visible)
+
+  def _on_body_changed(self):
+    self._layouts[MainState.HOME] = self._home_body_layout if ui_state.is_body else self._home_layout
+    self._set_mode_for_state()
 
   # BluePilot: toggle onroad debug panel from sidebar button
   def _on_debug_clicked(self):

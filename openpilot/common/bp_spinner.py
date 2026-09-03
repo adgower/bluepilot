@@ -2,19 +2,23 @@
 # Mirrors common/spinner.py but speaks the extended BP protocol (progress+text, retry, failed).
 import os
 import subprocess
+import sys
 
 from openpilot.common.basedir import BASEDIR
 
 
 class BPSpinner:
   def __init__(self):
+    self.start_error: OSError | None = None
     try:
       self.spinner_proc = subprocess.Popen(["./bp_spinner.py"],
                                            stdin=subprocess.PIPE,
-                                           cwd=os.path.join(BASEDIR, "system", "ui"),
+                                           cwd=os.path.join(BASEDIR, "openpilot", "system", "ui"),
                                            close_fds=True)
-    except OSError:
+    except OSError as exc:
       self.spinner_proc = None
+      self.start_error = exc
+      print(f"WARNING: failed to start BluePilot spinner: {exc}", file=sys.stderr)
 
   def __enter__(self):
     return self

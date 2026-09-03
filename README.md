@@ -1,4 +1,13 @@
-![](selfdrive/assets/img_bluepilot_boot.jpg)
+![](openpilot/selfdrive/assets/img_bluepilot_boot.jpg)
+
+> **Development checkout — not installable:** this tree is the unpublished
+> `codex/chestnut-personal-2` integration branch, rooted on SunnyPilot
+> `e87dbbaba710bbfe7661d9ff064d46170cac9442` with the platform source under
+> `openpilot/`. Host verification does not authorize a comma-device install or
+> vehicle use. The matching Sunny Chestnut model publication/provenance gate,
+> stationary hardware validation, and controlled vehicle validation remain open.
+> Installation instructions below apply only to an explicitly published release
+> branch such as `bp-7.0`, never to this development checkout.
 
 Table of Contents
 =======================
@@ -281,7 +290,11 @@ The BluePilot Portal is a React-based Progressive Web App served directly from t
 * **Settings** - Configure all parameters from the browser with live WebSocket updates
 * **Diagnostics** - Real-time TMUX streaming and parameter browser
 
-Modification endpoints are blocked (HTTP 403) while the vehicle is driving.
+The manager registers process `bp_portal` at
+`openpilot/system/manager/process_config.py`, runs module
+`bluepilot.backend.bp_portal`, and gates it with `EnableWebRoutesServer`.
+Protected route GET/POST/DELETE operations are offroad-only; missing, unknown,
+or unreadable `IsOffroad` state is treated as onroad and fails closed.
 
 ### Backend Architecture
 

@@ -32,17 +32,17 @@ find . -type f -name '*.tmp' -print -exec rm -f {} +
 
 # Clean other directories
 echo "Cleaning other directories..."
-rm -rf cereal/gen
+rm -rf openpilot/cereal/gen
 rm -rf .venv
 rm -rf .mypy_cache
 rm -rf panda/board/jungle/obj
 rm -f panda/board/obj/*.h
 rm -f panda/board/obj/version
-rm -f selfdrive/controls/lib/longitudinal_mpc_lib/*.json
-rm -f selfdrive/controls/lib/lateral_mpc_lib/*.json
-rm -rf tools/plotjuggler/bin
+rm -f openpilot/selfdrive/controls/lib/longitudinal_mpc_lib/*.json
+rm -f openpilot/selfdrive/controls/lib/lateral_mpc_lib/*.json
+rm -rf openpilot/tools/plotjuggler/bin
 
-rm -f selfdrive/assets/translations_assets.qrc
+rm -f openpilot/selfdrive/assets/translations_assets.qrc
 
 rm -f opendbc_repo/opendbc/safety/tests/misra/checkers.txt
 rm -f opendbc_repo/opendbc/safety/tests/misra/suppressions.txt

@@ -8,28 +8,40 @@ import logging
 
 from bluepilot.backend.utils.params_fallback import get_params_with_defaults
 
+try:
+    from openpilot.common.params import UnknownKeyName
+except ImportError:
+    class UnknownKeyName(Exception):
+        """Fallback used when the backend runs outside an openpilot checkout."""
+
 logger = logging.getLogger(__name__)
 
 params = get_params_with_defaults({
-    "IsOnRoad": False,
+    "IsOffroad": False,
     "BPPortalPort": "8088",
     "EnableWebRoutesServer": True,
 })
 
 
 def is_onroad():
-    """Check if vehicle is currently driving"""
+    """Return True unless Params explicitly confirms the device is offroad."""
     try:
-        return params.get_bool("IsOnRoad")
-    except:
-        return False
+        is_offroad = params.get("IsOffroad")
+        if is_offroad in (True, 1, "1", b"1"):
+            return False
+        if is_offroad in (False, 0, "0", b"0"):
+            return True
+        logger.warning("IsOffroad is missing or unknown; treating device as onroad")
+    except (OSError, RuntimeError, TypeError, ValueError, UnknownKeyName) as exc:
+        logger.warning("Unable to read IsOffroad; treating device as onroad: %s", exc)
+    return True
 
 
 def should_server_run():
     """Check if server should be running (always runs when enabled, rate-limited onroad)"""
     try:
         return params.get_bool("EnableWebRoutesServer")
-    except:
+    except (OSError, RuntimeError, TypeError, ValueError, UnknownKeyName):
         return True  # Default to running if we can't check
 
 

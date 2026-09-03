@@ -20,6 +20,23 @@ PARAMS_DIR = "/data/params/d"
 USE_DIRECT_FILE_READING = False
 _PARAM_TYPE_CACHE: Optional[Dict[str, str]] = None
 _PARAM_ATTRIBUTES_CACHE: Optional[Dict[str, List[str]]] = None
+_BLUEPILOT_PARAM_DEFINITIONS_CACHE: Optional[List[Dict[str, Any]]] = None
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+PARAM_KEYS_PATH = REPO_ROOT / "openpilot" / "common" / "params_keys.h"
+BLUEPILOT_PARAMS_PATH = REPO_ROOT / "bluepilot" / "params" / "params.json"
+BLUEPILOT_PANEL_ID = "bp_settings_panel"
+
+PARAM_CATEGORIES = {
+    "BluePilot": {
+        "name": "BluePilot",
+        "description": "Parameters declared by the current BluePilot schema",
+    },
+    "System": {
+        "name": "System",
+        "description": "OpenPilot and SunnyPilot system parameters",
+    },
+}
 
 CAR_PARAM_KEYS = {
     "CarParams", "CarParamsCache", "CarParamsPersistent", "CarParamsPrevRoute",
@@ -132,71 +149,97 @@ CRITICAL_PARAMS = {
     "LongitudinalPersonality",
 }
 
-# Cache for BluePilot panel params (loaded from JSON files)
+# Cache for parameter names derived from the canonical BluePilot schema.
 _BLUEPILOT_PARAMS_CACHE: Optional[set] = None
 
 
-def _load_bluepilot_params() -> set:
-    """Load all param names from BluePilot panel JSON files.
+def load_bluepilot_param_definitions() -> List[Dict[str, Any]]:
+    """Load and de-duplicate the canonical BluePilot parameter schema."""
+    global _BLUEPILOT_PARAM_DEFINITIONS_CACHE
+    if _BLUEPILOT_PARAM_DEFINITIONS_CACHE is not None:
+        return _BLUEPILOT_PARAM_DEFINITIONS_CACHE
 
-    Params defined in panel JSONs are considered 'BluePilot' params.
-    All other params are considered 'System' params.
-    """
+    definitions: Dict[str, Dict[str, Any]] = {}
+    try:
+        data = json.loads(BLUEPILOT_PARAMS_PATH.read_text())
+        for item in data.get("params", []):
+            if isinstance(item, dict) and item.get("name") and item.get("enabled", True):
+                definitions[item["name"]] = item
+    except (OSError, json.JSONDecodeError, TypeError) as exc:
+        logger.error("Failed to load BluePilot parameter schema %s: %s", BLUEPILOT_PARAMS_PATH, exc)
+
+    _BLUEPILOT_PARAM_DEFINITIONS_CACHE = list(definitions.values())
+    return _BLUEPILOT_PARAM_DEFINITIONS_CACHE
+
+
+def _load_bluepilot_params() -> set:
+    """Load param names from the canonical BluePilot parameter schema."""
     global _BLUEPILOT_PARAMS_CACHE
     if _BLUEPILOT_PARAMS_CACHE is not None:
         return _BLUEPILOT_PARAMS_CACHE
 
-    bp_params: set = set()
+    _BLUEPILOT_PARAMS_CACHE = {item["name"] for item in load_bluepilot_param_definitions()}
+    logger.info("Loaded %d BluePilot params from %s", len(_BLUEPILOT_PARAMS_CACHE), BLUEPILOT_PARAMS_PATH)
+    return _BLUEPILOT_PARAMS_CACHE
 
-    # Find panel JSON files
-    repo_root = Path(__file__).resolve().parents[3]  # Go up to openpilot root
-    panel_dirs = [
-        repo_root / "selfdrive" / "ui" / "bluepilot" / "menus",
-    ]
 
-    for panel_dir in panel_dirs:
-        if not panel_dir.exists():
-            continue
+def _humanize_param_name(name: str) -> str:
+    return re.sub(r"(?<!^)(?=[A-Z])", " ", name).replace("_", " ").strip()
 
-        for json_file in panel_dir.glob("*.json"):
-            try:
-                with open(json_file, 'r') as f:
-                    panel_data = json.load(f)
 
-                # Extract params from all controls in all groups
-                groups = panel_data.get("groups", [])
-                for group in groups:
-                    controls = group.get("controls", [])
-                    for control in controls:
-                        # Get param from control
-                        param = control.get("param")
-                        if param:
-                            bp_params.add(param)
+def _panel_control(definition: Dict[str, Any]) -> Dict[str, Any]:
+    """Translate canonical param metadata to the existing web-panel contract."""
+    name = definition["name"]
+    param_type = str(definition.get("type", "string")).lower()
+    control: Dict[str, Any] = {
+        "title": _humanize_param_name(name),
+        "desc": f"Current BluePilot parameter: {name}",
+        "param": name,
+    }
 
-                        # Also check params array (some controls have multiple params)
-                        params_list = control.get("params", [])
-                        bp_params.update(params_list)
+    if param_type == "bool":
+        control["type"] = "toggle"
+    elif param_type in {"int", "float"} and "min" in definition and "max" in definition:
+        control.update({
+            "type": "integer" if param_type == "int" else "float",
+            "min": definition["min"],
+            "max": definition["max"],
+            "increment": 1 if param_type == "int" else 0.01,
+        })
+    else:
+        control["type"] = "static_param_display"
 
-                        # Check options for selection controls
-                        options = control.get("options", [])
-                        for opt in options:
-                            if isinstance(opt, dict):
-                                opt_param = opt.get("param")
-                                if opt_param:
-                                    bp_params.add(opt_param)
+    return control
 
-                # Also include persistent params and other param arrays
-                for key in ["persistentParams", "clearOnManagerStartParams",
-                           "clearOnOnroadTransitionParams", "clearOnOffroadTransitionParams"]:
-                    bp_params.update(panel_data.get(key, []))
 
-            except (json.JSONDecodeError, IOError) as e:
-                logger.debug(f"Error reading panel file {json_file}: {e}")
-                continue
+def get_bluepilot_panels() -> List[Dict[str, str]]:
+    """Return the smallest current panel list backed by the canonical schema."""
+    return [{
+        "id": BLUEPILOT_PANEL_ID,
+        "name": "BluePilot",
+        "description": "BluePilot settings from the current parameter schema",
+        "icon": "",
+    }]
 
-    logger.info(f"Loaded {len(bp_params)} BluePilot params from panel JSON files")
-    _BLUEPILOT_PARAMS_CACHE = bp_params
-    return bp_params
+
+def get_bluepilot_panel(panel_id: str) -> Optional[Dict[str, Any]]:
+    if panel_id != BLUEPILOT_PANEL_ID:
+        return None
+
+    definitions = load_bluepilot_param_definitions()
+    return {
+        "menuName": "BluePilot",
+        "menuDescription": "BluePilot settings from the current parameter schema",
+        "groups": [{
+            "groupName": "bluepilot_params",
+            "title": "BluePilot settings",
+            "controls": [_panel_control(definition) for definition in definitions],
+        }],
+        "persistentParams": [
+            definition["name"] for definition in definitions
+            if "PERSISTENT" in definition.get("flags", [])
+        ],
+    }
 
 
 def _load_param_type_cache() -> Dict[str, str]:
@@ -209,10 +252,8 @@ def _load_param_type_cache() -> Dict[str, str]:
 
     # First, load from common/params_keys.h (openpilot core params)
     try:
-        repo_root = Path(__file__).resolve().parents[3]  # Go up to openpilot root
-        header_path = repo_root / "common" / "params_keys.h"
-        if header_path.exists():
-            contents = header_path.read_text()
+        if PARAM_KEYS_PATH.exists():
+            contents = PARAM_KEYS_PATH.read_text()
             pattern = re.compile(r'\{"([^"]+)",\s*\{[^,]+,\s*(STRING|BOOL|INT|FLOAT|TIME|JSON|BYTES)')
             for match in pattern.finditer(contents):
                 key, type_name = match.groups()
@@ -222,10 +263,8 @@ def _load_param_type_cache() -> Dict[str, str]:
 
     # Second, load from bluepilot/params/params.json (BluePilot-specific params)
     try:
-        repo_root = Path(__file__).resolve().parents[3]  # Go up to openpilot root
-        params_json_path = repo_root / "bluepilot" / "params" / "params.json"
-        if params_json_path.exists():
-            with open(params_json_path, 'r') as f:
+        if BLUEPILOT_PARAMS_PATH.exists():
+            with open(BLUEPILOT_PARAMS_PATH, 'r') as f:
                 bp_params_data = json.load(f)
             # params.json has structure: {"params": [...]}
             params_list = bp_params_data.get("params", []) if isinstance(bp_params_data, dict) else bp_params_data
@@ -252,10 +291,8 @@ def _load_param_attributes_cache() -> Dict[str, List[str]]:
 
     cache: Dict[str, List[str]] = {}
     try:
-        repo_root = Path(__file__).resolve().parents[3]  # Go up to openpilot root
-        header_path = repo_root / "common" / "params_keys.h"
-        if header_path.exists():
-            contents = header_path.read_text()
+        if PARAM_KEYS_PATH.exists():
+            contents = PARAM_KEYS_PATH.read_text()
             # Match pattern: {"ParamName", {FLAGS, TYPE, ...}}
             # FLAGS can be: PERSISTENT | BACKUP | CLEAR_ON_MANAGER_START | DONT_LOG | DEVELOPMENT_ONLY | etc.
             pattern = re.compile(r'\{"([^"]+)",\s*\{([^}]+)\}\}')
@@ -307,7 +344,7 @@ def write_param_direct(key: str, value: Any) -> Tuple[bool, Optional[str]]:
 def categorize_param(key: str) -> str:
     """Determine which category a param belongs to.
 
-    Params defined in BluePilot panel JSON files are 'BluePilot'.
+    Params defined in the canonical BluePilot parameter schema are 'BluePilot'.
     All other params are 'System'.
 
     Args:
@@ -336,21 +373,23 @@ def get_all_params(params: Optional[Params] = None) -> Dict[str, Any]:
 
     result = {}
 
-    # Try to get all params by listing the params directory
     params_dir = "/data/params/d" if os.path.exists("/data/params/d") else None
+    try:
+        param_keys = params.all_keys()
+    except (OSError, RuntimeError, TypeError, AttributeError) as exc:
+        logger.warning("Unable to enumerate Params keys: %s", exc)
+        param_keys = []
 
-    if params_dir and os.path.exists(params_dir):
-        # List all param files
+    if not param_keys and params_dir:
         try:
             param_keys = os.listdir(params_dir)
-        except Exception as e:
-            logger.error(f"Error listing params directory: {e}")
-            param_keys = []
-    else:
-        # Fallback to known params
-        param_keys = []
-        for category_info in PARAM_CATEGORIES.values():
-            param_keys.extend(category_info["params"])
+        except OSError as exc:
+            logger.error("Error listing params directory: %s", exc)
+
+    if not param_keys:
+        param_keys = list(_load_param_type_cache())
+
+    param_keys = sorted({key.decode() if isinstance(key, bytes) else str(key) for key in param_keys})
 
     for key in param_keys:
         result[key] = _build_param_entry(key, params, params_dir)
@@ -458,20 +497,29 @@ def set_param_value(key: str, value: Any, params: Optional[Params] = None) -> Di
     target_type = _get_param_type_name(params, key)
     value = _normalize_param_value(value, target_type)
 
+    def put_blocking(method, *args):
+        try:
+            return method(*args, block=True)
+        except TypeError as exc:
+            # Direct-file fallback methods predate the block keyword.
+            if "block" not in str(exc):
+                raise
+            return method(*args)
+
     try:
         if isinstance(value, bool) or (isinstance(value, str) and value.lower() in ["true", "false"]):
             bool_value = value if isinstance(value, bool) else value.lower() == "true"
-            params.put_bool(key, bool_value)
+            put_blocking(params.put_bool, key, bool_value)
         elif target_type == 'int' and not isinstance(value, bool):
             # For INT params, pass as Python int (Params API will convert to string)
             int_value = int(value) if not isinstance(value, int) else value
-            params.put(key, int_value)
+            put_blocking(params.put, key, int_value)
         elif target_type == 'float':
             # For FLOAT params, pass as Python float (Params API will convert to string)
             float_value = float(value) if not isinstance(value, float) else value
-            params.put(key, float_value)
+            put_blocking(params.put, key, float_value)
         else:
-            params.put(key, str(value))
+            put_blocking(params.put, key, str(value))
 
         return success_response()
 

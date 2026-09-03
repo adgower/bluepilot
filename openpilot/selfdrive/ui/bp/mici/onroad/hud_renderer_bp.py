@@ -3,8 +3,9 @@ from openpilot.common.params import Params
 from opendbc.sunnypilot.car.ford.lateral_curv_ext import PrimaryLateralControl
 from opendbc.car.structs import ControllerStateBP
 from openpilot.selfdrive.ui.mici.onroad.hud_renderer import (
-  HudRenderer, FONT_SIZES, KM_TO_MILE, CRUISE_DISABLED_CHAR, SET_SPEED_PERSISTENCE,
+  FONT_SIZES, KM_TO_MILE, CRUISE_DISABLED_CHAR, SET_SPEED_PERSISTENCE,
 )
+from openpilot.selfdrive.ui.sunnypilot.mici.onroad.hud_renderer import HudRendererSP
 from openpilot.system.ui.lib.multilang import tr
 from openpilot.selfdrive.ui.bp.mici.onroad.powerflow_gauge import MiciPowerflowGauge
 from openpilot.selfdrive.ui.ui_state import ui_state, UIStatus
@@ -24,7 +25,7 @@ from openpilot.selfdrive.ui.bp.mici.onroad.torque_bar_bp import TorqueBarBP as T
 
 LateralMode = ControllerStateBP.LateralMode
 
-class MiciHudRendererBP(HudRenderer):
+class MiciHudRendererBP(HudRendererSP):
   """BluePilot MICI HudRenderer with brake status coloring and powerflow gauge."""
 
   def __init__(self):
@@ -77,13 +78,8 @@ class MiciHudRendererBP(HudRenderer):
     bp_ui_log.state("MiciHudRenderer", "brakes_on", self._brakes_on)
 
   def _render(self, rect: rl.Rectangle) -> None:
-    """Render HUD elements to the screen."""
-    self._torque_bar.render(rect)
-
-    if self.is_cruise_set:
-      self._draw_set_speed(rect)
-
-    self._draw_steering_wheel(rect)
+    """Render SunnyPilot's complete HUD chain with BluePilot overrides."""
+    super()._render(rect)
 
   def _draw_steering_wheel(self, rect: rl.Rectangle) -> None:
     """Override to add brake status coloring to wheel icon, powerflow gauge, and lateral control overlay."""

@@ -92,7 +92,6 @@ def register(show_spinner=False) -> str | None:
         register_token = jwt.encode({'register': True, 'exp': datetime.now(UTC).replace(tzinfo=None) + timedelta(hours=1)},
                                     cast(str, private_key), algorithm=jwt_algo)
         cloudlog.info("getting pilotauth")
-        cloudlog.info("getting pilotauth")
         resp = api_get("v2/pilotauth/", method='POST', timeout=15,
                        imei=imei, imei2="", serial=serial, public_key=public_key, register_token=register_token)
 

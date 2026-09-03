@@ -90,19 +90,22 @@ DEVICE_TYPE="$(detect_device_type)"
 ###############################################################################
 # Path Constants
 ###############################################################################
-readonly BOOT_IMG="/usr/comma/bg.jpg"
+readonly OPENPILOT_ROOT="${BP_OPENPILOT_ROOT:-/data/openpilot}"
+readonly BOOT_IMG="${BP_BOOT_IMG:-/usr/comma/bg.jpg}"
 readonly BOOT_IMG_BKP="${BOOT_IMG}.backup"
 
 # Select the appropriate boot image based on device type
 if [ "$DEVICE_TYPE" = "mici" ]; then
-    readonly BLUEPILOT_BOOT_IMG="/data/openpilot/selfdrive/assets/img_bluepilot_boot_mici.jpg"
+    readonly BLUEPILOT_BOOT_IMG="$OPENPILOT_ROOT/openpilot/selfdrive/assets/img_bluepilot_boot_mici.jpg"
 else
-    readonly BLUEPILOT_BOOT_IMG="/data/openpilot/selfdrive/assets/img_bluepilot_boot.jpg"
+    readonly BLUEPILOT_BOOT_IMG="$OPENPILOT_ROOT/openpilot/selfdrive/assets/img_bluepilot_boot.jpg"
 fi
 
 # Spinner logo (loading screen): source stored outside LFS; dest is what spinner.py loads
-readonly BLUEPILOT_SPINNER_SRC="/data/openpilot/selfdrive/assets/images/spinner_bluepilot.png"
-readonly SPINNER_DEST="/data/openpilot/sunnypilot/selfdrive/assets/images/spinner_sunnypilot.png"
+readonly BLUEPILOT_SPINNER_SRC="$OPENPILOT_ROOT/openpilot/selfdrive/assets/images/spinner_bluepilot.png"
+readonly SPINNER_DEST="$OPENPILOT_ROOT/openpilot/sunnypilot/selfdrive/assets/images/spinner_sunnypilot.png"
+
+ROOT_PARTITION_WRITABLE=false
 
 ###############################################################################
 # Partition Management Functions
@@ -110,11 +113,15 @@ readonly SPINNER_DEST="/data/openpilot/sunnypilot/selfdrive/assets/images/spinne
 mount_partition_rw() {
     local partition="$1"
     print_info "Mounting $partition as read-write..."
-    sudo mount -o remount,rw "$partition"
-    if [ $? -eq 0 ]; then
+    # Mark the root dirty before remounting so an EXIT/signal in the narrow
+    # post-mount window still runs the read-only cleanup.
+    [ "$partition" = "/" ] && ROOT_PARTITION_WRITABLE=true
+    if sudo mount -o remount,rw "$partition"; then
         print_success "Successfully mounted $partition as read-write"
+        return 0
     else
         print_error "Failed to mount $partition as read-write"
+        [ "$partition" = "/" ] && cleanup_root_mount
         return 1
     fi
 }
@@ -124,10 +131,20 @@ mount_partition_ro() {
     print_info "Mounting $partition as read-only..."
     sudo mount -o remount,ro "$partition"
     if [ $? -eq 0 ]; then
+        [ "$partition" = "/" ] && ROOT_PARTITION_WRITABLE=false
         print_success "Successfully mounted $partition as read-only"
+        return 0
     else
         print_warning "Failed to mount $partition as read-only"
+        return 1
     fi
+}
+
+cleanup_root_mount() {
+    if [ "$ROOT_PARTITION_WRITABLE" = "true" ]; then
+        mount_partition_ro "/" || true
+    fi
+    return 0
 }
 
 ###############################################################################
@@ -158,59 +175,75 @@ clean_backups() {
 }
 
 update_boot_image() {
+    local status=0
     print_info "Updating boot image (device: $DEVICE_TYPE)..."
     print_info "Using image: $BLUEPILOT_BOOT_IMG"
-    mount_partition_rw "/"
+    if ! mount_partition_rw "/"; then
+        return 1
+    fi
 
     # Ensure the original file exists before proceeding
     if [ ! -f "$BOOT_IMG" ]; then
         print_error "Boot image ($BOOT_IMG) does not exist. Aborting update."
-        [ "$HEADLESS_MODE" != "true" ] && pause_for_user
-        return 1
-    fi
-
-    # Create backup if it does not already exist
-    if [ ! -f "$BOOT_IMG_BKP" ]; then
-        sudo cp "$BOOT_IMG" "$BOOT_IMG_BKP"
-        print_success "Backup created for boot image at $BOOT_IMG_BKP"
+        status=1
     else
-        print_info "Backup for boot image already exists at $BOOT_IMG_BKP"
+        # Create backup if it does not already exist
+        if [ ! -f "$BOOT_IMG_BKP" ]; then
+            if sudo cp "$BOOT_IMG" "$BOOT_IMG_BKP"; then
+                print_success "Backup created for boot image at $BOOT_IMG_BKP"
+            else
+                print_error "Failed to create boot image backup"
+                status=1
+            fi
+        else
+            print_info "Backup for boot image already exists at $BOOT_IMG_BKP"
+        fi
+
+        # Ensure the BluePilot image exists before replacing the boot image.
+        if [ ! -f "$BLUEPILOT_BOOT_IMG" ]; then
+            print_error "BluePilot boot image ($BLUEPILOT_BOOT_IMG) not found."
+            status=1
+        elif [ "$status" -eq 0 ]; then
+            if sudo cp "$BLUEPILOT_BOOT_IMG" "$BOOT_IMG"; then
+                print_success "Boot image updated with BluePilot file."
+            else
+                print_error "Failed to update boot image"
+                status=1
+            fi
+        fi
     fi
 
-    # Ensure the BluePilot image exists
-    if [ ! -f "$BLUEPILOT_BOOT_IMG" ]; then
-        print_error "BluePilot boot image ($BLUEPILOT_BOOT_IMG) not found."
-        [ "$HEADLESS_MODE" != "true" ] && pause_for_user
-        return 1
-    fi
-
-    # Overwrite the original file with the BluePilot image
-    sudo cp "$BLUEPILOT_BOOT_IMG" "$BOOT_IMG"
-    print_success "Boot image updated with BluePilot file."
-    mount_partition_ro "/"
+    mount_partition_ro "/" || status=1
     [ "$HEADLESS_MODE" != "true" ] && pause_for_user
+    return "$status"
 }
 
 restore_boot_image() {
+    local status=0
     print_info "Restoring boot image from backup..."
-    mount_partition_rw "/"
+    if ! mount_partition_rw "/"; then
+        return 1
+    fi
 
     # Check if backup exists before attempting restoration
     if [ ! -f "$BOOT_IMG_BKP" ]; then
         print_error "Backup for boot image not found at $BOOT_IMG_BKP"
-        [ "$HEADLESS_MODE" != "true" ] && pause_for_user
-        return 1
+        status=1
+    elif sudo cp "$BOOT_IMG_BKP" "$BOOT_IMG"; then
+        if sudo rm -f "$BOOT_IMG_BKP"; then
+            print_success "Boot image restored from backup."
+        else
+            print_error "Boot image restored, but backup could not be removed."
+            status=1
+        fi
+    else
+        print_error "Failed to restore boot image from backup."
+        status=1
     fi
 
-    # Restore backup to the original file location
-    sudo cp "$BOOT_IMG_BKP" "$BOOT_IMG"
-
-    # Remove the backup
-    sudo rm -f "$BOOT_IMG_BKP"
-
-    print_success "Boot image restored from backup."
-    mount_partition_ro "/"
+    mount_partition_ro "/" || status=1
     [ "$HEADLESS_MODE" != "true" ] && pause_for_user
+    return "$status"
 }
 
 check_custom_status() {
@@ -531,7 +564,7 @@ check_prerequisites() {
     local errors=0
 
     # Check if running on expected system
-    if [ ! -d "/data/openpilot" ]; then
+    if [ ! -d "$OPENPILOT_ROOT" ]; then
         print_error "This script is designed for CommaAI devices with OpenPilot."
         errors=$((errors + 1))
     fi
@@ -577,5 +610,9 @@ main() {
     done
 }
 
-# Run the script
-main "$@"
+# Run only when executed, so functions can be exercised safely by tests.
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    trap cleanup_root_mount EXIT
+    trap 'exit 130' HUP INT TERM
+    main "$@"
+fi

@@ -142,6 +142,7 @@ from bluepilot.backend.system import get_system_metrics
 # Params management
 from bluepilot.backend.params.params_manager import (
     get_all_params, get_params_by_category, get_param_value,
+    get_bluepilot_panel, get_bluepilot_panels,
     set_param_value, search_params, READONLY_PARAMS, CRITICAL_PARAMS
 )
 from bluepilot.backend.params.params_watcher import ParamsWatcher
@@ -187,18 +188,22 @@ from bluepilot.backend.handlers.log_downloads import (
 from bluepilot.backend.params.params_manager import Params
 params = Params()
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+BP_VERSION_PATH = REPO_ROOT / "BPVERSION"
+OP_VERSION_PATH = REPO_ROOT / "openpilot" / "common" / "version.h"
+SP_VERSION_PATH = REPO_ROOT / "openpilot" / "sunnypilot" / "common" / "version.h"
+UI_PROCESS_MODULE = "openpilot.selfdrive.ui.ui"
+
 
 def restart_ui_process():
     """Attempt to restart the UI process by signaling the running binary."""
-    process_names = {'ui', 'bluepilot-ui', 'bp-ui'}
-
     if psutil:
         try:
             targets = []
             for proc in psutil.process_iter(['pid', 'name', 'cmdline']):
-                name = (proc.info.get('name') or '').lower()
-                cmdline = ' '.join(proc.info.get('cmdline') or [])
-                if name in process_names or 'selfdrive/ui' in cmdline or 'bluepilot-ui' in cmdline:
+                name = proc.info.get('name') or ''
+                cmdline = proc.info.get('cmdline') or []
+                if name == UI_PROCESS_MODULE or UI_PROCESS_MODULE in cmdline:
                     targets.append(proc)
 
             if targets:
@@ -215,7 +220,7 @@ def restart_ui_process():
     # Fallback to pkill if psutil is unavailable or no process matched
     try:
         result = subprocess.run(
-            ['pkill', '-2', '-f', 'selfdrive/ui'],
+            ['pkill', '-2', '-f', UI_PROCESS_MODULE],
             capture_output=True,
             text=True,
             timeout=3
@@ -1074,7 +1079,7 @@ class WebRoutesHandler(BaseHTTPRequestHandler):
 
                     # Get BluePilot Version from BPVERSION file
                     try:
-                        bp_version_path = os.path.join(os.path.dirname(__file__), '../../BPVERSION')
+                        bp_version_path = BP_VERSION_PATH
                         if os.path.exists(bp_version_path):
                             with open(bp_version_path, 'r') as f:
                                 device_info['bp_version'] = f.read().strip()
@@ -1086,7 +1091,7 @@ class WebRoutesHandler(BaseHTTPRequestHandler):
 
                     # Get Openpilot Version from common/version.h file
                     try:
-                        op_version_path = os.path.join(os.path.dirname(__file__), '../../common/version.h')
+                        op_version_path = OP_VERSION_PATH
                         if os.path.exists(op_version_path):
                             with open(op_version_path, 'r') as f:
                                 content = f.read()
@@ -1105,7 +1110,7 @@ class WebRoutesHandler(BaseHTTPRequestHandler):
 
                     # Get SunnyPilot Version from version.h file
                     try:
-                        sp_version_path = os.path.join(os.path.dirname(__file__), '../../sunnypilot/common/version.h')
+                        sp_version_path = SP_VERSION_PATH
                         if os.path.exists(sp_version_path):
                             with open(sp_version_path, 'r') as f:
                                 content = f.read()
@@ -2032,58 +2037,10 @@ class WebRoutesHandler(BaseHTTPRequestHandler):
                 self.send_json_response(result)
 
             elif path == '/api/panels':
-                # List all available panel configurations
                 try:
-                    panel_dir = Path(__file__).parent.parent.parent / 'selfdrive' / 'ui' / 'bluepilot' / 'menus'
-                    panel_files = sorted(panel_dir.glob('bp_*_panel.json'))
-
-                    # Exclude network panel as requested
-                    exclude_panels = ['bp_network_panel.json']
-
-                    # Define Qt settings order (matching selfdrive/ui/bluepilot/qt/offroad/settings.cc)
-                    panel_order = [
-                        'bp_device_panel',
-                        'bp_toggles_panel',
-                        'bp_steering_panel',
-                        'bp_cruise_panel',
-                        'bp_visuals_panel',
-                        'bp_display_panel',
-                        'bp_vehicle_panel',
-                        'bp_developer_panel',
-                    ]
-
-                    # Load panel data
-                    panel_data_map = {}
-                    for panel_file in panel_files:
-                        if panel_file.name in exclude_panels:
-                            continue
-
-                        try:
-                            with open(panel_file, 'r') as f:
-                                panel_data = json.load(f)
-                                panel_data_map[panel_file.stem] = {
-                                    'id': panel_file.stem,  # e.g., 'bp_device_panel'
-                                    'name': panel_data.get('menuName', panel_file.stem),
-                                    'description': panel_data.get('menuDescription', ''),
-                                    'icon': panel_data.get('menuIcon', '')
-                                }
-                        except Exception as e:
-                            logger.warning(f"Failed to load panel {panel_file.name}: {e}")
-
-                    # Sort panels according to Qt order
-                    panels = []
-                    for panel_id in panel_order:
-                        if panel_id in panel_data_map:
-                            panels.append(panel_data_map[panel_id])
-
-                    # Add any panels not in the order list (for extensibility)
-                    for panel_id, panel_info in panel_data_map.items():
-                        if panel_id not in panel_order:
-                            panels.append(panel_info)
-
                     self.send_json_response({
                         'success': True,
-                        'panels': panels
+                        'panels': get_bluepilot_panels()
                     })
                 except Exception as e:
                     logger.error(f"Error listing panels: {e}", exc_info=True)
@@ -2094,15 +2051,10 @@ class WebRoutesHandler(BaseHTTPRequestHandler):
                 panel_id = path.split('/api/panels/')[1].strip('/')
 
                 try:
-                    panel_dir = Path(__file__).parent.parent.parent / 'selfdrive' / 'ui' / 'bluepilot' / 'menus'
-                    panel_file = panel_dir / f'{panel_id}.json'
-
-                    if not panel_file.exists():
+                    panel_data = get_bluepilot_panel(panel_id)
+                    if panel_data is None:
                         self.send_json_response({'success': False, 'error': 'Panel not found'}, 404)
                         return
-
-                    with open(panel_file, 'r') as f:
-                        panel_data = json.load(f)
 
                     self.send_json_response({
                         'success': True,
@@ -2219,9 +2171,11 @@ class WebRoutesHandler(BaseHTTPRequestHandler):
 
                             # Store value for backup
                             if value is not None:
-                                # Check if it's already a dict with _binary flag
-                                if isinstance(value, dict) and value.get('_binary'):
-                                    backup_data[key] = value
+                                if param_entry.get('value_is_binary') and param_entry.get('raw_value'):
+                                    backup_data[key] = {
+                                        '_binary': True,
+                                        'data': param_entry['raw_value'],
+                                    }
                                 elif isinstance(value, (str, int, float, bool)):
                                     backup_data[key] = value
                                 else:
@@ -3139,8 +3093,9 @@ class WebRoutesHandler(BaseHTTPRequestHandler):
                                 value = base64.b64decode(param_value['data'])
                                 params.put(param_key, value)
                             else:
-                                # String value
-                                params.put(param_key, str(param_value))
+                                result = set_param_value(param_key, param_value, params)
+                                if not result.get('success'):
+                                    raise ValueError(result.get('error', 'unknown parameter restore error'))
 
                             restored.append(param_key)
 

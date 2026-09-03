@@ -1,10 +1,19 @@
 # AGENTS.md - BluePilot Codebase Guide
 
-**Version:** 5.0.0 → 6.0.0 (in development)
-**Last Updated:** 2026-02-16
+**Version:** 7.0.0 (Chestnut integration in development)
+**Last Updated:** 2026-09-03
 **Target Audience:** AI agents, developers, and contributors
 
 This document provides a comprehensive guide to understanding, navigating, and modifying the BluePilot codebase. It is designed to help AI agents and human developers quickly understand the architecture, conventions, and key systems.
+
+> **Current checkout boundary:** `codex/chestnut-personal-2` is an unpublished,
+> development-only branch rooted on SunnyPilot
+> `e87dbbaba710bbfe7661d9ff064d46170cac9442`. It uses AGNOS 19.7 and Sunny's
+> nested `openpilot/` platform layout. Host tests are review evidence only; the
+> model-publication/provenance, device, and vehicle gates remain open, so do not
+> present this checkout as installable or drive-ready. Core OpenPilot and
+> SunnyPilot paths in this guide resolve beneath `openpilot/`; root-level
+> `bluepilot/` and the flattened `opendbc_repo/` remain overlay-owned.
 
 ---
 
@@ -33,13 +42,13 @@ This document provides a comprehensive guide to understanding, navigating, and m
 **BluePilot** is a Ford-focused fork of SunnyPilot (which itself forks OpenPilot/commaai).
 
 ### Key Information
-- **Current Version:** 5.0.0
-- **Based On:** SunnyPilot 2025.003.0.0
+- **Current Version:** 7.0.0 development integration
+- **Based On:** SunnyPilot `e87dbbaba710bbfe7661d9ff064d46170cac9442`
 - **Repository:** https://github.com/BluePilotDev/bluepilot
-- **Current Branch:** `bp-6.0-ui-refactor` (active development)
+- **Current Branch:** `codex/chestnut-personal-2` (unpublished development only)
 - **Main Dev Branch:** `bp-dev`
 - **Platform:** comma 3X device (TICI) and MICI devices
-- **AGNOS:** 13.1
+- **AGNOS:** 19.7
 - **Focus:** Ford-specific enhancements for lateral/longitudinal control, hybrid vehicle support, and enhanced UI
 
 ### What Makes BluePilot Unique
@@ -73,9 +82,9 @@ Layer 3: BluePilot customizations (top-level Ford-specific)
 1. **Minimize changes to stock openpilot and sunnypilot files.** When changes are necessary (e.g., to wire in BluePilot classes), wrap them in comments clearly stating what the change is for. This makes upstream merges straightforward - you can search for BluePilot comments to find all touchpoints.
 2. BluePilot classes use the `*BP` suffix (e.g., `AlertRendererBP`, `HudRendererBP`)
 3. SunnyPilot classes use the `*SP` suffix (e.g., `HudRendererSP`, `DriverStateRendererSP`)
-4. Override classes live in parallel directory structures (`selfdrive/ui/bp/` mirrors `selfdrive/ui/onroad/`)
-5. Conditional imports in wiring files (like `layouts/main.py`) swap stock classes for BP versions
-6. New processes are ADDED alongside stock processes via `procs +=` in `process_config.py`, never replacing them
+4. Override classes live in parallel directory structures (`openpilot/selfdrive/ui/bp/` mirrors `openpilot/selfdrive/ui/onroad/`)
+5. Conditional imports in wiring files (like `openpilot/selfdrive/ui/layouts/main.py`) swap stock classes for BP versions
+6. New processes are ADDED alongside stock processes via `procs +=` in `openpilot/system/manager/process_config.py`, never replacing them
 7. Feature flags via Params system allow toggling BP features without code changes
 
 ### Commenting Changes to Upstream Files
@@ -110,7 +119,7 @@ Widget (openpilot base)
 
 ### How Conditional Wiring Works
 
-In `selfdrive/ui/layouts/main.py`:
+In `openpilot/selfdrive/ui/layouts/main.py`:
 ```python
 if gui_app.sunnypilot_ui():
     from openpilot.selfdrive.ui.bp.onroad.augmented_road_view_bp import AugmentedRoadViewBP as AugmentedRoadView
@@ -161,7 +170,7 @@ BluePilotDev/
 │   │   └── public/              # Deployed web assets
 │   └── setup_web_routes.py      # Setup verification script
 │
-├── selfdrive/                    # Core driving logic (extended from openpilot)
+├── openpilot/selfdrive/          # Nested core driving logic (extended from openpilot)
 │   ├── ui/                       # UI system with three-layer inheritance
 │   │   ├── onroad/              # Stock openpilot onroad renderers (Layer 1)
 │   │   │   ├── alert_renderer.py
@@ -206,7 +215,7 @@ BluePilotDev/
 │   ├── selfdrived/              # Main self-drive daemon
 │   └── assets/                  # Icons, images, sounds
 │
-├── sunnypilot/                   # SunnyPilot integration layer
+├── openpilot/sunnypilot/         # Nested SunnyPilot integration layer
 │   ├── mads/                    # Modular Assistive Driving System (engagement state machine)
 │   ├── mapd/                    # OSM map data management
 │   ├── modeld/                  # Legacy SNPE model daemon
@@ -232,7 +241,7 @@ BluePilotDev/
 │                                # Contains BP lateral/longitudinal control logic
 │                                # Feature-flagged via Params (not inheritance)
 │
-├── system/                       # System services
+├── openpilot/system/             # Nested system services
 │   ├── manager/
 │   │   ├── process_config.py    # Process registry (BP processes added via procs +=)
 │   │   └── manager.py           # Process lifecycle manager
@@ -242,14 +251,14 @@ BluePilotDev/
 │   ├── updated/                 # Software update system
 │   └── ui/                      # System-level UI
 │
-├── common/                       # Shared utilities (58 subdirectories)
-├── cereal/                       # Communication protocol (Cap'n Proto messages)
+├── openpilot/common/             # Nested shared utilities
+├── openpilot/cereal/             # Nested communication protocol (Cap'n Proto messages)
 ├── panda/                        # Vehicle CAN bus interface hardware/firmware
 ├── msgq_repo/                    # Message queue system
 ├── rednose_repo/                 # State estimation library
 ├── tinygrad_repo/                # Neural network framework
 │
-├── BPVERSION                     # Current version (5.0.0)
+├── BPVERSION                     # Current development version
 ├── BP_CHANGES.json               # Structured changelog
 ├── BP-5.0-RELEASE.md             # Release notes
 ├── SConstruct                    # SCons build configuration
@@ -407,7 +416,7 @@ BluePilot uses a comprehensive parameter system for configuration and feature to
 - `FordPrefEnableDebugLogs` - Enable debug logging
 
 #### BluePilot Portal (`BPPortal*`)
-- `BPPortalEnabled` - Enable portal server
+- `EnableWebRoutesServer` - Enable the `bluepilot.backend.bp_portal` manager process
 - `BPPortalPort` - HTTP server port (default 8088)
 - `BPPortalWebSocketPort` - WebSocket port (default 8089)
 
@@ -457,42 +466,42 @@ pid_gain = bp_params.get_float("LC_PID_gain_UI", min_val=0.0, max_val=5.0)
 BluePilot inherits and extends features from SunnyPilot. These features are fully integrated and available to BluePilot users.
 
 ### MADS - Modular Assistive Driving System
-- **Location:** `sunnypilot/mads/`
+- **Location:** `openpilot/sunnypilot/mads/`
 - **Purpose:** Decoupled lateral/longitudinal engagement state machine
 - **Benefit:** Independent control of steering and speed systems
 
 ### NNLC - Neural Network Lateral Control
-- **Location:** `sunnypilot/selfdrive/controls/lib/nnlc/`
+- **Location:** `openpilot/sunnypilot/selfdrive/controls/lib/nnlc/`
 - **Purpose:** ML-based steering control
 - **Benefit:** Smoother, more natural steering behavior
 
 ### ICBM - Intelligent Cruise Button Management
-- **Location:** `sunnypilot/selfdrive/car/intelligent_cruise_button_management/`
+- **Location:** `openpilot/sunnypilot/selfdrive/car/intelligent_cruise_button_management/`
 - **Purpose:** Automatic speed matching based on cruise button presses
 - **Benefit:** Simplifies speed adjustments
 
 ### SLA - Speed Limit Assist
-- **Location:** `sunnypilot/selfdrive/controls/lib/speed_limit/`
+- **Location:** `openpilot/sunnypilot/selfdrive/controls/lib/speed_limit/`
 - **Purpose:** Vision + map + PCM fusion for speed limit detection
 - **Benefit:** Automatic speed limit awareness
 
 ### MAPD - Map Data Management
-- **Location:** `sunnypilot/mapd/`
+- **Location:** `openpilot/sunnypilot/mapd/`
 - **Purpose:** OpenStreetMap data download and management
 - **Benefit:** Enhanced navigation and speed limit data
 
 ### Sunnylink
-- **Location:** `sunnypilot/sunnylink/`
+- **Location:** `openpilot/sunnypilot/sunnylink/`
 - **Purpose:** Cloud connectivity, backups, device registration
 - **Benefit:** Remote device management and data backup
 
 ### Model Manager
-- **Location:** `sunnypilot/models/`
+- **Location:** `openpilot/sunnypilot/models/`
 - **Purpose:** 86+ driving model selection with async download
 - **Benefit:** Choose optimal model for driving conditions
 
 ### ControlsExt
-- **Location:** `sunnypilot/selfdrive/controls/controlsd_ext.py`
+- **Location:** `openpilot/sunnypilot/selfdrive/controls/controlsd_ext.py`
 - **Purpose:** Extends controlsd without modifying stock code
 - **Benefit:** Clean integration of SP control features
 
@@ -503,7 +512,7 @@ BluePilot inherits and extends features from SunnyPilot. These features are full
 The UI system demonstrates the three-layer inheritance architecture in action. Understanding this is critical for UI development.
 
 ### Layer 1: Stock OpenPilot
-**Location:** `selfdrive/ui/onroad/`
+**Location:** `openpilot/selfdrive/ui/onroad/`
 
 Base renderers:
 - `alert_renderer.py` - Alert display
@@ -514,7 +523,7 @@ Base renderers:
 - `model_renderer.py` - Model path visualization
 
 ### Layer 2: SunnyPilot Extensions
-**Location:** `selfdrive/ui/sunnypilot/onroad/`
+**Location:** `openpilot/selfdrive/ui/sunnypilot/onroad/`
 
 Extended renderers:
 - `hud_renderer.py` → `HudRendererSP` - Extended HUD features
@@ -523,7 +532,7 @@ Extended renderers:
 - `developer_ui/` - Developer diagnostic overlay
 
 ### Layer 3: BluePilot Customizations
-**Location:** `selfdrive/ui/bp/onroad/` (TICI) and `selfdrive/ui/bp/mici/onroad/` (MICI)
+**Location:** `openpilot/selfdrive/ui/bp/onroad/` (TICI) and `openpilot/selfdrive/ui/bp/mici/onroad/` (MICI)
 
 #### TICI Device Renderers
 - `alert_renderer_bp.py` → `AlertRendererBP` - Pill-shaped alerts with custom styling
@@ -535,12 +544,12 @@ Extended renderers:
 - `powerflow_gauge.py` → `PowerFlowGauge` - Hybrid power flow arch gauge
 
 #### MICI Device Renderers
-**Location:** `selfdrive/ui/bp/mici/onroad/`
+**Location:** `openpilot/selfdrive/ui/bp/mici/onroad/`
 - Smaller screen adaptations of TICI renderers
 - Simplified layouts for MICI display constraints
 
 ### Layout Wiring
-**Location:** `selfdrive/ui/layouts/main.py`
+**Location:** `openpilot/selfdrive/ui/layouts/main.py`
 
 This is the **key file** that wires everything together using conditional imports:
 
@@ -559,7 +568,7 @@ else:
 ```
 
 ### Settings UI
-**Location:** `selfdrive/ui/bp/layouts/settings/bluepilot.py`
+**Location:** `openpilot/selfdrive/ui/bp/layouts/settings/bluepilot.py`
 
 The BluePilot settings menu contains 20+ toggles for:
 - Control system tuning (lateral/longitudinal)
@@ -607,7 +616,7 @@ camerad → modelV2 → modeld → selfdriveState → controlsd → carControl �
 ```
 
 ### Cereal Schema Location
-**Location:** `cereal/` directory
+**Location:** `openpilot/cereal/` directory
 
 To add new messages or fields, modify the `.capnp` schema files and rebuild.
 
@@ -630,7 +639,7 @@ BluePilot uses SCons for building the project.
 scons -j$(nproc)
 
 # Build specific target
-scons -j$(nproc) selfdrive/ui/
+scons -j$(nproc) openpilot/selfdrive/ui/
 
 # Clean build
 scons -c
@@ -665,17 +674,17 @@ Follow these conventions to maintain codebase consistency and enable clean upstr
 - Stock OpenPilot classes have no suffix
 
 ### Directory Structure
-- BluePilot UI: `selfdrive/ui/bp/`
+- BluePilot UI: `openpilot/selfdrive/ui/bp/`
 - BluePilot processes: `bluepilot/`
-- SunnyPilot extensions: `sunnypilot/`
-- Stock OpenPilot: `selfdrive/`, `system/`, `common/`
+- SunnyPilot extensions: `openpilot/sunnypilot/` and `openpilot/selfdrive/ui/sunnypilot/`
+- Stock OpenPilot: `openpilot/selfdrive/`, `openpilot/system/`, `openpilot/common/`
 
 ### Modification Rules
 
 **DO:**
 - Create new files that inherit from stock classes
 - Use conditional imports in layout wiring files
-- Add new processes via `procs +=` in `process_config.py`
+- Add new processes via `procs +=` in `openpilot/system/manager/process_config.py`
 - Use feature flags via Params for runtime toggling
 - Place Ford-specific logic in `opendbc_repo/opendbc/car/ford/`
 - Wrap any changes to upstream files in `# BluePilot: <description>` / `# End BluePilot` comments
@@ -724,20 +733,20 @@ markers = [
 pytest -n auto
 
 # Run specific test file
-pytest selfdrive/test/test_car_models.py
+pytest openpilot/selfdrive/test/test_car_models.py
 
 # Run with markers
 pytest -m "not slow"  # Skip slow tests
 pytest -m tici        # Only device tests
 
 # Run with coverage
-pytest --cov=selfdrive --cov-report=html
+pytest --cov=openpilot/selfdrive --cov-report=html
 ```
 
 ### Test Locations
 - Process-specific tests in module directories
 - Portal testing: `bluepilot/test_web_routes.py` (uses mock Params for dev machines)
-- Integration tests in `selfdrive/test/`
+- Integration tests in `openpilot/selfdrive/test/`
 
 ### Writing Tests
 
@@ -827,7 +836,7 @@ This section provides quick answers to common development tasks.
 
 ### Adding a New Onroad UI Element
 
-1. Create new file in `selfdrive/ui/bp/onroad/` (e.g., `my_widget_bp.py`)
+1. Create new file in `openpilot/selfdrive/ui/bp/onroad/` (e.g., `my_widget_bp.py`)
 2. Inherit from stock Widget class
 3. Override `render()` method with BP additions
 4. Wire into `augmented_road_view_bp.py`
@@ -860,7 +869,7 @@ class MyWidgetBP(Widget):
 }
 ```
 
-2. Add toggle in `selfdrive/ui/bp/layouts/settings/bluepilot.py`:
+2. Add toggle in `openpilot/selfdrive/ui/bp/layouts/settings/bluepilot.py`:
 ```python
 self.add_toggle("My New Feature", "MyNewFeature")
 ```
@@ -903,10 +912,10 @@ elif self.path.startswith("/api/my-endpoint"):
 ### Adding a New BluePilot Process
 
 1. Create process in `bluepilot/my_process/my_process.py`
-2. Register in `system/manager/process_config.py`:
+2. Register in `openpilot/system/manager/process_config.py`:
 ```python
 procs += [
-    ("my_process", ("bluepilot.my_process.my_process", ["MyProcess"])),
+    PythonProcess("my_process", "bluepilot.my_process.my_process", only_offroad),
 ]
 ```
 3. Handle lifecycle (start/stop/restart)
@@ -914,7 +923,7 @@ procs += [
 
 ### Modifying Alert Display
 
-**File:** `selfdrive/ui/bp/onroad/alert_renderer_bp.py`
+**File:** `openpilot/selfdrive/ui/bp/onroad/alert_renderer_bp.py`
 
 1. Locate `AlertRendererBP` class
 2. Override `render()` method or specific alert methods
@@ -923,7 +932,7 @@ procs += [
 
 ### Modifying HUD Elements
 
-**File:** `selfdrive/ui/bp/onroad/hud_renderer_bp.py`
+**File:** `openpilot/selfdrive/ui/bp/onroad/hud_renderer_bp.py`
 
 1. Locate `HudRendererBP` class
 2. Add/modify gauge in appropriate method:
@@ -938,19 +947,19 @@ procs += [
 
 | Task | File(s) |
 |------|---------|
-| **Add onroad UI element** | `selfdrive/ui/bp/onroad/` + wire in `augmented_road_view_bp.py` |
-| **Add settings toggle** | `selfdrive/ui/bp/layouts/settings/bluepilot.py` + `bluepilot/params/params.json` |
+| **Add onroad UI element** | `openpilot/selfdrive/ui/bp/onroad/` + wire in `augmented_road_view_bp.py` |
+| **Add settings toggle** | `openpilot/selfdrive/ui/bp/layouts/settings/bluepilot.py` + `bluepilot/params/params.json` |
 | **Modify Ford lateral control** | `opendbc_repo/opendbc/car/ford/carcontroller.py` |
 | **Modify Ford longitudinal control** | `opendbc_repo/opendbc/car/ford/carcontroller.py` |
 | **Add web API endpoint** | `bluepilot/backend/bp_portal.py` |
-| **Add BluePilot process** | `bluepilot/` + `system/manager/process_config.py` |
-| **Modify alert display** | `selfdrive/ui/bp/onroad/alert_renderer_bp.py` |
-| **Modify HUD elements** | `selfdrive/ui/bp/onroad/hud_renderer_bp.py` |
+| **Add BluePilot process** | `bluepilot/` + `openpilot/system/manager/process_config.py` |
+| **Modify alert display** | `openpilot/selfdrive/ui/bp/onroad/alert_renderer_bp.py` |
+| **Modify HUD elements** | `openpilot/selfdrive/ui/bp/onroad/hud_renderer_bp.py` |
 | **Add parameter** | `bluepilot/params/params.json` + `bluepilot/params/bp_params.py` |
-| **Change UI layout wiring** | `selfdrive/ui/layouts/main.py` |
-| **MICI device UI changes** | `selfdrive/ui/bp/mici/onroad/` |
-| **Add hybrid gauge** | `selfdrive/ui/bp/onroad/hybrid_battery_gauge.py` or `powerflow_gauge.py` |
-| **Modify blindspot display** | `selfdrive/ui/bp/onroad/blindspot_renderer.py` |
+| **Change UI layout wiring** | `openpilot/selfdrive/ui/layouts/main.py` |
+| **MICI device UI changes** | `openpilot/selfdrive/ui/bp/mici/onroad/` |
+| **Add hybrid gauge** | `openpilot/selfdrive/ui/bp/onroad/hybrid_battery_gauge.py` or `powerflow_gauge.py` |
+| **Modify blindspot display** | `openpilot/selfdrive/ui/bp/onroad/blindspot_renderer.py` |
 | **Add route processing** | `bluepilot/backend/routes/` |
 | **Add video processing** | `bluepilot/backend/video/` |
 
@@ -1076,7 +1085,7 @@ This document provides a comprehensive guide to the BluePilot codebase. Key take
 - Review existing code for patterns and examples
 - Check parameter definitions in `bluepilot/params/params.json`
 - Examine carcontroller.py for control system logic
-- Study layout wiring in `selfdrive/ui/layouts/main.py`
+- Study layout wiring in `openpilot/selfdrive/ui/layouts/main.py`
 - Read release notes for recent changes
 
 ### Contributing
@@ -1091,6 +1100,6 @@ When contributing to BluePilot:
 
 ---
 
-**Document Version:** 1.0
-**Last Updated:** 2026-02-16
-**BluePilot Version:** 5.0.0 → 6.0.0 (in development)
+**Document Version:** 2.0
+**Last Updated:** 2026-09-03
+**BluePilot Version:** 7.0.0 (Chestnut integration in development)
