@@ -1,158 +1,108 @@
-# Personal Chestnut integration
+# Personal Chestnut integration provenance
 
-## Status and scope
+## Status
 
-`codex/chestnut-personal` is a personal experimental BluePilot branch for a
-comma four with the official Chestnut/GPU/power kit. It integrates SunnyPilot's
-small- and big-model system, including the merged big-to-small fallback, while
-preserving BluePilot's current Ford behavior.
+`codex/chestnut-personal-2` is a personal development integration for a comma
+four with the official Chestnut/GPU/power kit. It is **development-only and
+not installable**. Host tests and a host build establish source reproducibility;
+they do not establish CI, an installable upstream artifact, device behavior,
+or vehicle safety.
 
-This branch is not an official `bp-7.0` Chestnut release or compatibility
-claim. It must pass the stationary and controlled-driving gates below before it
-is considered usable on this vehicle.
+The pre-provenance verified integration HEAD is
+`d3fdabbd7a310fc2a8b99604b9930e9b4637eeac` (`test: make messaging retry
+process spawn-safe`). This document is committed immediately after that HEAD.
+A Git commit cannot embed its own SHA, so the documentation commit and the
+published remote HEAD must be verified through Git history after publication,
+for example with `git rev-parse codex/chestnut-personal-2` and
+`git log --first-parent d3fdabbd..codex/chestnut-personal-2`.
 
 ## Reproducible source tuple
 
-| Component | Pinned value |
+| Component | Verified value |
 | --- | --- |
-| BluePilot base | `bp-dev@5f17cf389b1a48b09185a732564db11bd6477b58` |
-| SunnyPilot source | `master@51987a62d07c44cc9e14b4d85dcb445edecd17d3` |
-| Matching Sunny staging build | `staging-chestnut@6831cf5e79fe790c2559ad2ae590614038131ad1` |
-| Sunny big-to-small fallback | PR #1974, merge `98ed8111f6bb5136aa1c7f0cf3078f3ac3a43210` |
-| Sunny OpenPilot sync | merge `1dd5a7c91d9a82b18cdb117f8372568362814d06` |
-| Incorporated OpenPilot commit | `4a13639cfd122ccb9113a4d6ce225dcbd8e61914` (`reduce chestnut states`, #38705) |
-| AGNOS | `19.6`, manifest `openpilot/common/hardware/comma/agnos.json` |
-| Chestnut firmware | `ed4e39b7` |
-| Small/QCOM default | `CD210`, ref `5b6436a90cf6902b8aaa71c2b6f3d7164d8ae391` |
-| Chestnut default | `Lebowski`, ref `fa0c6876d3cf070e91e25e5353ceadc68a5b3285` |
-| Small model source | `driving_models_v21.json` |
-| Chestnut model source | `driving_models_chestnut_v22.json` |
-| Default small-model hash | `49133798d9cd9cacf47085c7ef8122bfee88cd9c6192a8314c81bfb1b37f5809` |
-| opendbc upstream | `06743dfb39cff0f0cd5ddae244afef42891f4b93` plus the audited BluePilot Ford overlay |
+| Branch | `codex/chestnut-personal-2` |
+| SunnyPilot source | `e87dbbaba710bbfe7661d9ff064d46170cac9442` |
+| Incorporated OpenPilot | `6249f4d5b0e63c05f08bce12ca3afebda9f764a3` |
+| AGNOS | 19.7; `agnos.json` SHA-256 `ce7eeb20a915a16ec2f4363fdeace6e4cbb2918f3ee929cc7388e4a601657d74` |
+| Chestnut firmware | `ed4e39b7`; `firmware_wrapped.bin` SHA-256 `9520fde0bf43d499c07abd0a09b74e94d8a7cc3d610f577b7a4e218ab8a378e9` |
+| Small model | `CD210`, ref `5b6436a90cf6902b8aaa71c2b6f3d7164d8ae391`, SHA-256 `c5be11d2fb1115be953c541f30c50f7c71a00bc4a0e128e19aa11b60689317fc` |
+| Big model | `BMRLNAP Model v4`, ref `f877d7a0ccc3cce943c76e285214c020cd65c899`, SHA-256 `2c814f08a2c51323b87839fbf8d2c2a9853a2b5536271b3d67f7b7a2de7f9374` |
+| BluePilot merge source | `501a7c0e911245044196fcc90cb077a69fa0749b` (PR #195) |
+| Original personal rollback | `1f4ec37186e6d9f7a3679790b1a75b026e008c26` |
+| Flattened opendbc provenance | `f95f996f`; this is source provenance, not a live submodule |
 | msgq | `e7396e76dadbb49e374d4b664ff6bbb43a39bcb0` |
-| panda | `ea5a83a956d61c7540c1a13a8d76f08c24675d1b` |
+| neural network data | `03cac2d30e111e0689c0429cb8c1fe6cb5a905af` |
+| panda | `74a0adced421e8b7acd728d0f9988ce225423f13` |
 | rednose | `28d4a7f69e80e1c3e0d24ca0733d7daeaeade3d0` |
 | teleoprtc | `1aa8fc433bef1519a95c0700c96258c3be6dfb34` |
-| tinygrad | `66ee3cfb4f3a3908a6a20ddfbec7774ba7c09b4e` |
+| tinygrad | `e837e367aac9e1a66e689f4f32ce20ca9367df13` |
 
-The staging build is provenance evidence that the pinned Sunny source was
-built by Sunny's Chestnut pipeline. This BluePilot branch is installed as an
-on-device source build; it does not reuse Sunny's prebuilt artifact.
+No opendbc submodule is declared or initialized. Git LFS pull and fsck are
+green, and all six declared submodule pins above are exact.
 
-## Integration contract
+## Integration and behavior boundary
 
-- Sunny owns Chestnut detection, firmware qualification, hardware state,
-  AGNOS, model catalogs, model downloads, and model runtimes.
-- BluePilot consumes the canonical `ChestnutActive`, `ChestnutLoading`,
-  `bigModelReady`, `chestnutState`, and `modelV2.big` state. It does not add a
-  second hardware detector.
-- The small and Chestnut model slots remain separate:
-  `ModelManager_ActiveBundle` and `ModelManager_ActiveBundleChestnut`, with
-  separate catalogs and caches.
-- The legacy `ModelManager_ActiveBundleUSBGPU` key exists only as a one-way
-  migration source for an older selection.
-- `modeld_v2` warms the Chestnut model asynchronously while preparing the small
-  fallback. A load timeout, runtime exception, or non-finite output clears
-  `ChestnutActive`, marks subsequent output as non-big, and stays on the small
-  model until the process or device restarts.
-- Ford controls continue to consume ordinary model and planner messages. They
-  do not branch on Chestnut state.
+Sunny owns Chestnut detection, firmware qualification, hardware state, AGNOS,
+model catalogs/downloads, and model runtimes. BluePilot consumes the canonical
+Chestnut state and leaves Ford controls on ordinary model/planner messages.
+The small and Chestnut model slots remain separate and the legacy USB-GPU key
+is only a one-way migration source.
 
-## BluePilot preservation boundary
+No Ford retune is included: angle-mode high remains `1.25` and low remains
+`1.29`. The literal one-comment opendbc plan gate was impossible after the
+nested Sunny layout. Its provenance-aware replacement classified 189 paths
+against `501a7c0e`: candidate-to-original Ford production/safety content is
+only PR #195; inherited non-Ford opendbc content maps to `1f4ec371`; four
+exact nested imports are reversible; 27 paths are whitespace-only; one
+test-only dampening assertion correction is inherited; and `mads.h` has one
+MISRA comment. This is a classification/audit result, not a new Ford behavior
+claim.
 
-The merge retains the current BluePilot portal, branding, BP UI subclasses,
-ALP, angle-mode dampening, radar recovery, VIN/fingerprinting behavior, Sentry
-diagnostics, and Ford controller/safety extensions. The Ford angle tune is
-frozen for initial testing:
+## Host verification evidence
 
-- high factor: `1.25`
-- low factor: `1.29`
+Task 4 completed `git lfs pull` and `git lfs fsck` successfully. Sunny model
+tests reported 53 passed, 1 skipped; `modeld_v2` reported 100 passed, 1
+skipped. Six submodule pins are listed in the source tuple.
 
-No steering, longitudinal, safety-limit, or vehicle-tuning change is part of
-the Chestnut integration.
+Task 5's exact Step 1 result after the test-only spawn-safe commit
+`d3fdabbd` was 363 passed, 1 skipped, with no warnings. Backend direct scripts
+passed (8 import groups and 5 module checks), and the real `GET /api/status`
+portal smoke passed. Focused Ford verification reported 56 passed plus 16
+subtests. The full Ford safety matrix is inherited and failing: 22,759 failed,
+474 passed, 285 skipped, and 1,756 subtests. Its raw exit was 1 for both the
+candidate and original `1f4ec371`; after elapsed-time-only normalization the
+complete failure text was byte-identical. The differential gate passes; the
+safety suite does not pass.
 
-## Deliberately excluded follow-ups
+Task 6 ran exactly:
 
-- SunnyPilot #1965, AMD-over-USB lock retries, is not included because it was
-  not merged into the pinned Sunny baseline.
-- OpenPilot #38711, #38727, and #38706 are not cherry-picked directly.
-- No later OpenPilot changes, BluePilot-specific detector, or parallel fallback
-  implementation are included.
+```bash
+PATH="$PWD/.venv/bin:$PATH" scons -j4
+```
 
-These changes should arrive through a future reviewed SunnyPilot sync rather
-than bypassing the fork's upstream layer.
+SCons exited 0 and printed `scons: done building targets.` The complete log
+contained 27 warning matches: one PWD diagnostic, 23 third-party acados Python
+`SyntaxWarning`s, one CasADi supported-version warning, and two linker
+warnings. These warnings are recorded, not waived. The build produced only
+ignored/generated artifacts; no tracked source changes resulted.
 
-## Local verification evidence
+## Closed installer gate and rollback
 
-The following checks were run on the merged source tree before publication:
+The current Sunny artifact snapshot remains unsuitable for installation:
+development branch source `e87dbbab` does not match staging source `47db84eb`,
+and workflow run `33706185619` failed at `Upload model to HF`. Do not install
+this branch or treat it as a Sunny release artifact.
 
-- Git LFS checkout and `git lfs fsck`: complete and clean for all pinned model
-  and UI artifacts.
-- Full host `ZMQ=1` SCons build: passed, including cereal, model, panda firmware,
-  replay, and UI build targets.
-- Cereal service validation: 83 passed.
-- Params migration and model-manager default tests: 54 passed, 1 skipped.
-- Complete Sunny model-manager and `modeld_v2` test directories: 153 passed,
-  1 skipped, including load-timeout, runtime-exception, and non-finite-output
-  fallback coverage.
-- BluePilot Ford controller, ALP, fingerprint, angle, and dampening tests plus
-  the upstream Ford car test: 52 passed, 16 subtests passed.
-- Manager/process registry, BluePilot UI/sound/theme, and portal smoke tests:
-  44 passed, 1 skipped, with 2 existing warnings caused by test functions
-  returning values.
-- Migrated BluePilot and Ford Python trees: `compileall` passed.
+The rollback heads are original personal `1f4ec371` and the BluePilot merge
+source `501a7c0e`; the normal production rollback target remains the reviewed
+`bp-dev` installer path. Device installation stays closed until a matching
+reviewed Sunny artifact and all offroad, stationary, fallback, rollback, and
+controlled vehicle-validation gates are completed. Host/build evidence is not
+device or vehicle validation.
 
-These are host-source verification results. No comma-four/C3X/MICI hardware
-build, device installation, stationary soak, rollback exercise, or road test
-has been performed by this merge.
+## Deliberately excluded work
 
-## Known Ford safety baseline exception
-
-Sunny's current Ford safety test matrix exposes an existing BluePilot reset
-bypass-latch test debt. The full merged matrix reports 22,759 failures, 474
-passes, 285 skips, and 1,756 passing subtests. This is not treated as a green
-safety suite.
-
-To separate merge regression from inherited behavior, the exact Ford safety
-test file from pinned BluePilot `bp-dev@5f17cf389` was run twice: once against
-the exact pinned BluePilot safety implementation and once against the merged
-safety implementation. Both runs produced the identical result: 22,556
-failures, 487 passes, 279 skips, and 1,930 passing subtests. The merged branch
-therefore preserves the pinned BluePilot behavior for that exact matrix, but
-does not resolve or waive the underlying test debt. Changing the safety latch
-was outside this Chestnut-only merge and is intentionally deferred for a
-separate review.
-
-Device installation remains gated on explicitly accepting this known baseline
-exception and completing the offroad, rollback, and controlled-driving checks
-below.
-
-## Installation and rollback gate
-
-1. Confirm SSH/device recovery and save the current `bp-dev` installer path.
-2. Power down and disconnect Chestnut.
-3. Install `codex/chestnut-personal` and let it build while parked on external
-   power. Accept only the pinned upstream AGNOS path while offroad.
-4. Confirm the displayed branch/commit, Ford detection, UI, logger, updater,
-   and small-model operation.
-5. Reinstall `bp-dev` and confirm it boots, then reinstall this branch. This
-   exercises rollback before Chestnut is introduced.
-6. Power down, attach the official Chestnut/GPU/power setup, and boot parked.
-7. Confirm firmware, telemetry, model integrity, `bigModelReady`, and
-   `ChestnutActive` before a 30-minute stationary soak.
-8. Test upstream-supported big-to-small failure handling while stationary.
-   Never hot-unplug the hardware while driving.
-9. Reboot without Chestnut and confirm normal small-model startup.
-
-Driving starts with the small model on a short route. Repeat the same route with
-the Sunny big model without changing the vehicle, tires, controller mode, tune,
-or other BluePilot settings. Roll back immediately for stale model output,
-unexplained steering behavior, repeated model restarts, hardware faults,
-thermal or power instability, or failure to return cleanly to the small model.
-
-## Evidence still required on the physical kit
-
-Repository tests and local builds do not prove comma-four, AGNOS, USB, thermal,
-power, or on-road behavior. Final acceptance requires a normal no-Chestnut
-drive, reliable offroad Chestnut activation, verified fallback, an exercised
-`bp-dev` rollback, and no unexplained Ford behavior change with the frozen tune.
+No later OpenPilot changes, BluePilot-specific detector, parallel fallback,
+or Ford steering/longitudinal/safety-limit change is included. Future upstream
+work must arrive through a reviewed SunnyPilot sync rather than bypassing the
+three-layer integration boundary.
