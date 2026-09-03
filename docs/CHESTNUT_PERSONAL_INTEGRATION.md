@@ -171,10 +171,47 @@ ignored/generated artifacts; no tracked source changes resulted.
 
 ## Closed installer gate and rollback
 
-The current Sunny artifact snapshot remains unsuitable for installation:
-development branch source `e87dbbab` does not match staging source `47db84eb`,
-and workflow run `33706185619` failed at `Upload model to HF`. Do not install
-this branch or treat it as a Sunny release artifact.
+The live upstream snapshot was refreshed through BrowserOS neo on 2026-09-03:
+
+- OpenPilot `master` is `3a13b67b6f92c0716616342f285165a215ab7900`.
+- SunnyPilot `master` remains
+  `e87dbbaba710bbfe7661d9ff064d46170cac9442`. PR #1974 is merged and PR
+  #1965 remains open.
+- SunnyPilot `staging-chestnut` remains
+  `35ddbb199887b4048323c809ecff052e627a3bf5` and records source
+  `47db84ebfb47f82bfe3ebb3d78cb13d4bc9a91a3`; `dev-chestnut` is
+  `99114d2135f5ebfa3059601bef90cbd7d5f8d567` and records the same source.
+- BluePilot `bp-dev` remains
+  `501a7c0e911245044196fcc90cb077a69fa0749b`; `bp-7.0` remains
+  `e1d051d7ba270261b4455068bd68f1a58db15a4a`.
+- SunnyPilot PR #1986 is open. Its head
+  `5b7ddce980a40cf025a6f34959c36b4b1454dd59` is one workflow-only commit on
+  top of `e87dbbab` and changes three workflow YAML files to replace Hugging
+  Face OAuth with a token.
+- PR-head workflow run `33720345491` completed successfully: `build_big_model`,
+  artifact creation, `upload_defaults`, and `Upload model to HF` all passed.
+  Its `model-BMRLNAP-Model-v4-32` artifact is 734,268,714 bytes with digest
+  `sha256:3c8c139b6df2014dcbac32b6ca3ea326808f13ceb216d62ebdc44c70d34ea7d6`.
+  The workflow published `models/defaults/big/default_models.json` at
+  `2026-09-03T06:00:38Z` and the
+  `model-BMRLNAP-Model-v4-5b7ddce9-32` folder; all 18 chunk objects are
+  publicly listed by the Hugging Face tree API. The generated default metadata
+  records ref `5b7ddce9` because the workflow checkout was shallow.
+- The public Chestnut runtime catalog
+  `sunnypilot-models/gh-pages/docs/driving_models_chestnut_v23.json` still
+  lists `BMRLNAP Model v4` dated 2026-08-30, ref `f877d7a0`, with 17 chunk
+  hashes at the older `recompiled24` path. The earlier exact-`master` run
+  `33706185619` had uploaded the byte-identical
+  `model-BMRLNAP-Model-v4-e87dbbab-28` folder before it failed at the metadata
+  upload step.
+
+The successful PR-head run demonstrates that the artifact-publishing blocker
+is fixed on the unmerged workflow branch and that its chunk objects are public.
+It does not open the installer gate: PR #1986 is not merged, the runtime catalog
+still points to its prior model tuple, and the staged source `47db84eb` still
+does not match this branch's incorporated Sunny source `e87dbbab`. Do not
+install this branch or treat it as a Sunny release artifact until one coherent,
+reviewed source/staging/build/model tuple satisfies the complete gate.
 
 The rollback heads are original personal `1f4ec371` and the BluePilot merge
 source `501a7c0e`; the normal production rollback target remains the reviewed
