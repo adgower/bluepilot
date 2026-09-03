@@ -2,7 +2,6 @@ import capnp
 import multiprocessing
 import numbers
 import random
-import threading
 import time
 from openpilot.common.test import OpenpilotTestCase
 from openpilot.common.parameterized import parameterized
@@ -41,10 +40,10 @@ def assert_carstate(cs1, cs2):
     if isinstance(val1, numbers.Number):
       assert val1 == val2, f"{f}: sent '{val1}' vs recvd '{val2}'"
 
-def delayed_send(delay, sock, dat):
-  def send_func():
-    sock.send(dat)
-  threading.Timer(delay, send_func).start()
+def recv_one_retry_in_process(sock: str, timeout: int, ready: multiprocessing.Event, result: multiprocessing.Queue):
+  sub_sock = messaging.sub_sock(sock, timeout=timeout)
+  ready.set()
+  result.put(messaging.recv_one_retry(sub_sock).as_builder().to_bytes())
 
 
 class TestMessaging(OpenpilotTestCase):
@@ -145,20 +144,31 @@ class TestMessaging(OpenpilotTestCase):
     sock = "carState"
     sock_timeout = 0.005
     pub_sock = messaging.pub_sock(sock)
-    sub_sock = messaging.sub_sock(sock, timeout=round(sock_timeout*1000))
-
-    # wait 5 socket timeouts and make sure it's still retrying
-    p = multiprocessing.Process(target=messaging.recv_one_retry, args=(sub_sock,))
+    ctx = multiprocessing.get_context("spawn")
+    ready = ctx.Event()
+    result = ctx.Queue()
+    p = ctx.Process(target=recv_one_retry_in_process, args=(sock, round(sock_timeout*1000), ready, result))
     p.start()
-    time.sleep(sock_timeout*5)
-    assert p.is_alive()
-    p.terminate()
+    try:
+      assert ready.wait(timeout=5)
 
-    # wait 5 socket timeouts before sending
-    msg = random_carstate()
-    start_time = time.monotonic()
-    delayed_send(sock_timeout*5, pub_sock, msg.to_bytes())
-    recvd = messaging.recv_one_retry(sub_sock)
-    assert (time.monotonic() - start_time) >= sock_timeout*5
-    assert isinstance(recvd, capnp._DynamicStructReader)
-    assert_carstate(msg.carState, recvd.carState)
+      # wait 5 socket timeouts and make sure it's still retrying
+      time.sleep(sock_timeout*5)
+      assert p.is_alive()
+
+      msg = random_carstate()
+      msg_bytes = msg.to_bytes()
+      deadline = time.monotonic() + 5
+      while p.is_alive() and time.monotonic() < deadline:
+        pub_sock.send(msg_bytes)
+        p.join(timeout=sock_timeout)
+
+      assert not p.is_alive()
+      assert p.exitcode == 0
+      recvd = messaging.log_from_bytes(result.get(timeout=1))
+      assert isinstance(recvd, capnp._DynamicStructReader)
+      assert_carstate(msg.carState, recvd.carState)
+    finally:
+      if p.is_alive():
+        p.terminate()
+      p.join()
