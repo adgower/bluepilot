@@ -1,0 +1,17 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "evidence_verified": true,
+    "brake_blocker_resolved": false,
+    "steering_blocker_resolved": false,
+    "integration_selected": false,
+    "paired_clean_heads_preserved": true,
+    "device_access_or_changes": false,
+    "longitudinal_focused_segments": 21,
+    "steering_frozen_focused_segments": 21,
+    "separate_contract_unit_tests": 14,
+    "separate_contract_raw_replay": false,
+    "original_steering_identification_segments": 100,
+    "new_full316_or737_candidate_replay": false
+  }
+}

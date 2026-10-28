@@ -1,0 +1,14 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "new_segments_rehashed": 14,
+    "new_sessions": 2,
+    "all_completed_remote_logs_locally_covered_at_acquisition": 154,
+    "analysis_counts_reconciled": true,
+    "coordination_faults": 0,
+    "controls_mismatch_events": 0,
+    "paired_worktrees_clean": true,
+    "device_mutations": 0,
+    "owner_install_choice": "Leave Comma unchanged for now"
+  }
+}

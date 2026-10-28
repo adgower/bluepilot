@@ -1,0 +1,2 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+Local saved-log investigation only. Preserve exact paired source commits and owner1.20/0.97. Reproduce recorded22–25mph shortfall and74mph excess, verify actual send-time command reconstruction, then attribute each command boundary and guard. Distinguish body response from wheel target/mapping and planner demands. Retain user debris-avoidance context; no vehicle change, controller prototype or road improvement claim.

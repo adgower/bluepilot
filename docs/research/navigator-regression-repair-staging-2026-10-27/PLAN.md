@@ -1,0 +1,2 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+Push exact checked pair; fresh device/Mac source/settings/calibration/firmware backup; separate inactive source staging; isolated ARM build and current production Ford/native/context/clock/engagement tests. Preserve active pair, service, Alpha, 1.20/0.97 and settings. No activation, reboot, OS/firmware update, active ECU queries or CAN transmission. ARM suite is distinct from retained route replay.

@@ -1,0 +1,2 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+Independent read-only integration review found no blockers. Default-off/context-fault handling intact; bounded measured clearance and latched fault semantics preserved. Tests use actual production imports through existing Scene helper. Class AST and narrow constructor change match prototype. Replay/native evidence retains documented reconstruction and retained-result limits. No reviewer source or device changes.

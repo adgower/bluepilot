@@ -1,0 +1,47 @@
+{
+  "531:DesiredTorqBrk": [
+    "AccBrkPrchgActv_B_Actl",
+    "AccBrkDis_B_Actl",
+    "AccBrkDeny_B_Actl",
+    "AccBrkActv_B_Actl",
+    "PrplDrgCtlActv_B_Actl",
+    "VehLongOvrGnd_A_Est",
+    "AccStopActv_B_ActlBrk"
+  ],
+  "125:BrakeSnData_4": [
+    "BrkTot_Tq_RqArb",
+    "BrkTot_Tq_Actl"
+  ],
+  "119:BrakeSnData_3": [
+    "VehLongComp_A_Actl"
+  ],
+  "374:PowertrainData_10": [
+    "GearEngag_D_Actl",
+    "GearPos_D_Trg",
+    "GearPos_D_Actl"
+  ],
+  "516:EngVehicleSpThrottle": [
+    "EngAoutNActl_D_QF",
+    "ApedPos_Pc_ActlArb",
+    "EngAout_N_Actl"
+  ],
+  "512:TorqueDataEngFlags": [
+    "PrplWhlTot_Tq_Rq",
+    "PrplWhlTot_Tq_LimMn"
+  ],
+  "359:VehicleOperatingModes": [
+    "PrplWhlTot2_Tq_Actl"
+  ],
+  "357:EngBrakeData": [
+    "CmbbDeny_B_ActlPrpl",
+    "PrplTqMnSat_B_Actl",
+    "AccEngStat_D_Actl",
+    "AccStopMde_D_Rq"
+  ],
+  "146:Accel_Data_FD1": [
+    "VehVert2_A_Actl",
+    "VehLong2_A_Actl",
+    "VehLongAActl_D_Qf"
+  ],
+  "390:ACCDATA": null
+}

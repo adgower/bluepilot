@@ -1,0 +1,13 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "passed": true,
+    "raw_segments": 25,
+    "baseline_reproduction": true,
+    "metrics_and_event_counts_reconciled": true,
+    "command_reconstruction_within_half_wire_step": true,
+    "hardware_vs_native_rejection_difference_explicit": true,
+    "no_device_mutations": true,
+    "note": "Does not establish causal improvement, true lane-position error or safety certification."
+  }
+}

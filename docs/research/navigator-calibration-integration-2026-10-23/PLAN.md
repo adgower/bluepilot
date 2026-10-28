@@ -1,0 +1,6 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+# Calibration continuity paired integration
+
+Owner authorized local paired integration and full build checks. Reuse existing codex/navigator-tracking-release parent/child checkouts. Verify the validated repair hashes and prior complete safety receipt; preserve1.20/0.97 and clean unchanged child d2e8d040. Commit parent producer repair, nineteen continuity cases/subprocess isolation and integration note, retaining exact child gitlink. No empty child commit, source merge, push or device access.
+
+Run fresh focused tests before commit. After commit run minimal/full Mac builds, full parent and full child suites, Panda firmware build, lint/whitespace and exact HEAD/gitlink/clean-tree audit. The prior1,015-segment replay and longitudinal/native evidence remain valid only if production/test hashes match exactly; do not rerun identical long replay absent a code change or failure. Record infrastructure issues and repair using existing tools/caches, without weakening checks. Update roadmap and report with final exact pair and limits. ARM/parked/road acceptance remains separate.

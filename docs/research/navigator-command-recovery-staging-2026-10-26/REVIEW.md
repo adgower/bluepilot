@@ -1,0 +1,4 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+# Inactive staging operation review
+
+Fresh read-only review_command_staging checked staging, namespace/cgroup supervision, validation and finalization scripts. It found the old private prefix assertion in pipeline_screen; corrected to navigator_validation_1dbbc0189 before payload creation/upload. Retained test-deps availability and pytest9.1.1/subtests/numpy/psutil verified over read-onlySSH. No activation/CAN/live-checkout mutation dispatch found. Isolation makes active /data read-only, privateparams/cache/log/home, masks vehicleUSB/SPI/GPIO/serial, networkdown, capabilitiesdropped and resourcesbounded. Finalization changes only candidateGit metadata and preserves installedfirmwareimage. No automatic activation. Reviewer did not touch device or source.

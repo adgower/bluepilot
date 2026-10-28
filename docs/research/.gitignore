@@ -1,0 +1,10 @@
+# Public reference allowlist; private/generated evidence belongs outside Git.
+*
+!*/
+!*.md
+!*.py
+!.gitignore
+!PUBLIC_VERIFICATION.json
+!navigator-documentation-coverage-*.json
+!navigator-documentation-verification-*.json
+!protocol-fields.json

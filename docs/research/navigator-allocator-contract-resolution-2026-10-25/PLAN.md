@@ -1,0 +1,10 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+# Guard-aware allocator resolution (local research)
+
+Keep the current pitch mapping and nominal brake admission/release policy. Track nominal decision history independently of the selected brake/precharge bits. BP thresholds propose an alternative but never determine whether the original sustained-demand budget is charged. Charge signed negative exposure and a fixed episode deadline even before a nominal brake is admitted; tiny crossings cannot rearm. Exhaustion or invalid timing/context immediately returns nominal demand until sustained clean recovery.
+
+Precharge is active brake actuation, not a release. Reset the physical release qualification only while a real brake/precharge request is being emitted; start the existing received-torque release clock once both are withdrawn. Keep 4 Nm / three distinct samples / 40 ms and all original stalled/progressing timeouts unchanged. Precharge duration shares the actuation budget, never a new unlimited stage.
+
+Keep feedback brake bit truthful and add separate research IPC metadata for precharge/allocator phase. Freeze positive integral growth whenever fresh actual brake/precharge/limited authority withholds the wanted positive propulsion. Negative error and stronger braking demand continue updating. Compare authority-only antiwindup with an explicitly bounded post-ramp recovery hold; no recorded integral reseeding or shadow hardware feedback.
+
+RED/GREEN: old allocator fails independent debt/deadline, precharge release-phase distinction and recovery tests. Run focused contracts, retained tests, full 137-segment coupled replay and native hooks. Evaluate lost activity, all speed bands, later braking and named pulses; never score disengagement as improvement. Frozen observed vehicle response cannot prove counterfactual comfort or release. Paired branches, settings, device and 1.20/0.97 untouched.

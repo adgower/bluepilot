@@ -1,0 +1,8 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "focused_tests_passed": 11,
+    "device_changes": 0,
+    "deployment_status": "Unselected report-local prototypes only; no demonstrated physical low-speed fix."
+  }
+}

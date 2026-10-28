@@ -1,0 +1,13 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "verification_passed": true,
+    "paired_source_heads_and_clean_state_preserved": true,
+    "lateral_routes": 42,
+    "lateral_segments": 737,
+    "lateral_controller_updates": 4244330,
+    "lateral_newest_drive_changed_updates": 0,
+    "prototype_local_only": true,
+    "physical_improvement_established": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "evidence_verified": true,
+    "controller_accepted": false,
+    "longitudinal_blocker_resolved": false,
+    "decision": "Reject joint diagnostic at focused gate; response/authority model remains unidentified",
+    "fresh_candidate_routes": 1,
+    "fresh_candidate_segments": 21,
+    "fresh_candidate_callbacks": 60424,
+    "fresh_candidate_producers": 114018,
+    "fresh_full316_candidate": false,
+    "fresh_native_candidate": false,
+    "baseline_reuse_explicit": true,
+    "joint_tests_pass": 17,
+    "first_spike_tests_pass": 7,
+    "rejected_spike_counterexample_expected_failures": 1,
+    "nonzero_proposals": 410,
+    "commits": 69,
+    "extra_full_brake_callbacks": 85,
+    "weaker_encoded_strong_rows": 212,
+    "original_raw_support_new_segments": 79,
+    "reconstructed_support_audit_segments": 316,
+    "physical_model_identified": false,
+    "research_sidechannel_not_paired_transport": true,
+    "no_device_or_integration_operations": true
+  }
+}

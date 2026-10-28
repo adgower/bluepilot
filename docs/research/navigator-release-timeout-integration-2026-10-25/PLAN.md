@@ -1,0 +1,2 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+Integrate hash-verified progress-aware release timeout only; preserve measured clearance, steering, CAN safety limits and restart behavior. Add recorded regression and adversarial guards. Run full Mac builds, parent/child suites, source equivalence and existing replay equivalence. Commit child and exact parent pin locally after successful checks. No device writes or publishing.

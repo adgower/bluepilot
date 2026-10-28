@@ -1,0 +1,4 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+# Review resolution
+
+Independent reviewer /root/review_agnos20_readiness found two items: post-reboot service-state mismatch and default bytecode/index metadata writes. Both were fixed. Bytecode regression was observed failing before the change and passes after it; 46-test suite green. Per-command Git safe.directory and GIT_OPTIONAL_LOCKS=0 also corrected the initial root-check inspection failure. Repeated default-mode device preflight succeeded. The previous inherited-native-artifact review item was resolved by a pristine replacement, with positive source receipts. No deferred review findings. AGNOS20/hardware execution proof remains pending as documented, not waived.

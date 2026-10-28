@@ -1,0 +1,2 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+Push exact reviewed pair; verify remotes; fresh source/settings/firmware/launch backup and hash-verified private Mac copy; isolated source checkout; ARM build and native/parent smoke tests with private params/cache, network down and vehicle devices blocked. Passive current-stack offroad/powered Park checks only. No activation, OS/firmware update or settings mutation. Leave Alpha unchanged.

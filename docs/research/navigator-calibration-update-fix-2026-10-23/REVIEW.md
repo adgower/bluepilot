@@ -1,0 +1,4 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+# Independent source review
+
+Fresh reviewer found no production defect in the calibration rebuild: it preserves sample time, applies calibration first and leaves downstream invalid/freshness/reversed-time rejection intact. Initial review identified missing real-card coverage in the new direct-controller harness. Added real Car.controls_update/CarInterface/schema engagement, parent fault latch, owner-disable/rearm and nonfinite-source regressions. Re-review independently passed the subprocess wrapper and found no unresolved blocker. A later assertion also exercises the next actual ACC callback after rearm. No device access or source edits by reviewer. Exact test counts are in engagement-final.log/JUnit, rather than the reviewer's informal count.

@@ -1,0 +1,27 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "status": "VERIFIED_REJECTED_EXPERIMENT",
+    "local_parent": "2ca969e45afee229d7ec5c03c8768e137410c8d1",
+    "local_child": "bcd706d02fd6b8159b1eadcb6b2a56b504f69567",
+    "paired_clean": true,
+    "exact_child_pin": true,
+    "source_segments_rehashed": 197,
+    "controller_callbacks": 570269,
+    "no_active_atomic_gap_segments": 185,
+    "diagnostic_segments": 12,
+    "active_prefix_gaps": 5,
+    "tests_passed": 46,
+    "lint_passed": true,
+    "native_segments": 197,
+    "native_added_rejections": 0,
+    "native_relay_faults": 0,
+    "native_permission_forced": false,
+    "candidate_added_simulated_release_fault": true,
+    "weaker_strong_braking_encoded": 19,
+    "device_access": false,
+    "device_mutations": 0,
+    "arm_build": false,
+    "limits": "Frozen vehicle/torque response, unknown exact receive-drain order,12segment source with5activeprefix gaps diagnostic-only. Native hook compatibility is not physical/RPM/comfort proof."
+  }
+}

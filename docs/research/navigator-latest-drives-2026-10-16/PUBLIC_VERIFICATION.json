@@ -1,0 +1,16 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "segments": 63,
+    "bytes": 542731430,
+    "active_selfdrive_seconds": 2184.32,
+    "active_5to25_angle_samples": 552,
+    "active_5to25_seconds_approx": 27.6,
+    "active_13to17_angle_samples": 112,
+    "clean_13to17_seconds_approx": 1.8,
+    "added_correction_samples": 3,
+    "new_vs_previous_reconstructed_output_differences": 0,
+    "actual_active_angle_rejections": 2,
+    "device_mutations": 0
+  }
+}

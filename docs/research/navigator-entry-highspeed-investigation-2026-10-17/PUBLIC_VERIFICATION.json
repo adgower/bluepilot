@@ -1,0 +1,15 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "passed": true,
+    "saved_segments_reverified": 25,
+    "prior_session_normalized_hashes_reverified": 18,
+    "both_recorded_symptom_witnesses_red_in_normal_expectation_and_pass_in_reproduction_mode": true,
+    "atomic_target_recomputation_consistent": true,
+    "lane_crossing_ground_truth_available": false,
+    "device_contact": false,
+    "device_mutations": 0,
+    "controller_changes": 0,
+    "scope": "Investigation and recorded-data witnesses only; no candidate fix, plant-model validation, hardware validation or lane-crossing certification."
+  }
+}

@@ -1,0 +1,8 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+# Earlier bounded unwind onset — approved local prototype
+
+Goal: reduce serial confirmation delay in60–70mph withdrawing-demand episodes using independently validated wheel/body history; preserve1.20/0.97, native safety and current gain/cap/onset-rate/predictive release. User approved preceding onset recommendation and full local safety replay. Report-local Candidate subclasses installed CalibratedMidUnwind; paired branches/device remain untouched.
+
+Credit five-frame persistence only when five strictly increasing now/state/control/motion timestamps span160–300ms, current inherited fraction and confirmed predictive wheel excess are positive, existing body history has at least five fresh samples spanning160–300ms, no release is pending, CAN is valid, and demand has withdrawn at least2% from the recent five-sample peak without rising on the current update. Existing current atomic target/body/context checks remain mandatory. Invalid/duplicate/generation gaps clear independent credit history. Credit never changes magnitude or ramp rate. No credit at/below60mph or at/above70mph; inherited protected>=75mph policy retained.
+
+Verification: behavioral red/green tests; fault/duplicate/stale/catch-up/rising/boundary tests; full53-recording819-segment generated-controller comparison against installed code with independent native hooks, original physical RX/timers, recorded atomic calibration and separate causal calibration fixtures; default-off parity and protected outputs; transitions and active aborts; original-send episode replay and packed-effect timings. Physical handling improvement cannot be proved offline.

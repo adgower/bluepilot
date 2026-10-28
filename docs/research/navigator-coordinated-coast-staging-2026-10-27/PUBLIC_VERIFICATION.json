@@ -1,0 +1,20 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "state": "complete_inactive",
+    "stage_source": "/data/navigator-validation/<private timestamp identifier>-df788e027/source",
+    "candidate_activated": false,
+    "ARM_build_passed": true,
+    "retained_tests_passed": 75,
+    "parent_smoke_passed": 14,
+    "calibration_passed": 1,
+    "current_stack_offroad_passed": true,
+    "selected_preferences_calibration_steering_1_20_0_97_preserved": true,
+    "Alpha_preserved": "1",
+    "OS_firmware_service_continue_unchanged": true,
+    "candidate_git_clean_self_contained": true,
+    "background_validation_active": false,
+    "activation_restart_reboot_OS_firmware_update_performed": false,
+    "powered_candidate_parked_or_road_validated": false
+  }
+}

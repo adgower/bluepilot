@@ -1,0 +1,23 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "verification": "analysis_and_native_receipts_verified",
+    "candidate_acceptance": "REJECTED",
+    "controller_segments": 216,
+    "complete_active_input_segments": 204,
+    "diagnostic_only_segments": 12,
+    "controller_callbacks": 625238,
+    "prototype_tests": 13,
+    "installed_contract_tests": 202,
+    "installed_contract_subtests": 20,
+    "sanitizer": false,
+    "sanitizer_note": "macOS denied UBSan dylib loading. Explicit local unsanitized native hooks passed; no sanitizer proof.",
+    "new_timeouts_vs_reference": 0,
+    "weaker_encoded_strong_target_samples": 2071,
+    "maximum_weaker_encoded_mps2": 0.03900000000000148,
+    "extra_brake_command_seconds": 51.178576850772515,
+    "device_access": false,
+    "paired_source_unchanged": true,
+    "causal_physical_improvement_proved": false
+  }
+}

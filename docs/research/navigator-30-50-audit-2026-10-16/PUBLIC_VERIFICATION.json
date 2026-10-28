@@ -1,0 +1,9 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "normalized_inputs_hash_verified": 21,
+    "previous_coverage_reconciled": true,
+    "device_changes": 0,
+    "gain_recommendations": 0
+  }
+}

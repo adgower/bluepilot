@@ -1,0 +1,21 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "local_only": true,
+    "baseline_exact_new_callbacks": 70291,
+    "baseline_producer_updates": 131258,
+    "full_controller_segments": 162,
+    "full_controller_callbacks": 472261,
+    "added_faults": 0,
+    "inactive_changes": 0,
+    "gas_during_brake_or_precharge": 0,
+    "baseline_faults_retained": 2,
+    "strict_strong_decel_gate_pass": false,
+    "weaker_wire_samples": 27,
+    "max_encoded_delta": 0.003900000000001569,
+    "paired_source_clean": true,
+    "device_access": false,
+    "native_candidate_replay_run": false,
+    "arm_build_run": false
+  }
+}

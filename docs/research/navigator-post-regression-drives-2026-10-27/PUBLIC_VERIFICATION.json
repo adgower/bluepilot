@@ -1,0 +1,24 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "verified": true,
+    "segments_downloaded_and_hash_verified": 79,
+    "sessions": 9,
+    "new_source_sessions": 3,
+    "raw_bytes": 668805101,
+    "new_source_parent": "e05e42f43d2907a4f02915a924cfd95a46197e79",
+    "installed_child": "5097b993965b2b65ea3fcca7e3769cfa9403d49c",
+    "new_source_controls_mismatch": 0,
+    "new_source_coordinator_faults": 0,
+    "active_clock_samples_checked": 102353,
+    "invalid_future_or_stale_active_pose_samples": 0,
+    "longitudinal_domain_verification": true,
+    "lateral_domain_verification": true,
+    "independent_key_numeric_recalculation": true,
+    "video_clip_hash_and_frames_verified": true,
+    "privacy_scan_passed": true,
+    "device_mutations": 0,
+    "controller_or_paired_source_changes": false,
+    "causal_or_physical_cure_claimed": false
+  }
+}

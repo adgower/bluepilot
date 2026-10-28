@@ -1,0 +1,15 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "actual_committed_replay_matches_all_five_prototype_hashes": true,
+    "segments": 72,
+    "configured_tx_accepted": 242250,
+    "tx_rejected": 0,
+    "offroad_trial_off_checks_before_enable": true,
+    "offroad_trial_enabled_final_checks": true,
+    "ignition_on_acceptance": "PASS:55.01s stationary passive check",
+    "road_evaluation": "not performed",
+    "powered_model_samples": 1101,
+    "powered_panda_samples": 550
+  }
+}

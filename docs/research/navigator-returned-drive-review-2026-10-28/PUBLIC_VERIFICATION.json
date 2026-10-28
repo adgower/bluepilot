@@ -1,0 +1,21 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "evidence_checks_passed": true,
+    "acquired_original_segments": 29,
+    "recording_groups": 3,
+    "compressed_bytes": 266844797,
+    "before_after_device_source_settings_protected_service_equal": true,
+    "device_mutations": 0,
+    "local_paired_source_clean": true,
+    "controls_mismatch_alert_episodes": 0,
+    "coordination_fault_episodes": 0,
+    "high_decoded_rpm_candidates": 1,
+    "rpm_quality_resolved": false,
+    "driver_input_candidate_groups": 27,
+    "new_70_to_85mph_evidence": false,
+    "physical_improvement_proved": false,
+    "coasting_labels_corrected_in_new_analysis": true,
+    "previous_rejected_prototype_artifacts_unchanged": true
+  }
+}

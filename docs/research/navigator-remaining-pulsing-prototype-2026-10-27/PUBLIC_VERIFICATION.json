@@ -1,0 +1,21 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "verification_passed": true,
+    "treatment_benefit_gate_passed": false,
+    "decision": "Reject as pulsing treatment: zero activations and zero changed commands",
+    "routes": 23,
+    "segments": 316,
+    "callbacks": 903645,
+    "producer_recomputed": 1725152,
+    "native_slots": 903463,
+    "resumed_execution_disclosed": true,
+    "focused_checks": 11,
+    "ford_tests": 1033,
+    "ford_subtests": 75,
+    "default_ubsan_environment_failures_retained": 54,
+    "complete_active_input_segments": 304,
+    "diagnostic_only_segments": 12,
+    "no_hardware_or_physical_comfort_claim": true
+  }
+}

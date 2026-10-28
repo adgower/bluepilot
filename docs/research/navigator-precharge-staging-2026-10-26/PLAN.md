@@ -1,0 +1,2 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+Fresh backup + verified Mac copy; isolated source and full ARM build; native Ford/precharge/transport tests and retained regressions; finalize exact pair; activation snapshot + guarded swap with Alpha unchanged; passive offroad check; request powered Park check. No OS/firmware updates or active ECU queries. Existing installer preserves launch/firmware/calibration and rollback tree. Local Git bundles used; no publication required.

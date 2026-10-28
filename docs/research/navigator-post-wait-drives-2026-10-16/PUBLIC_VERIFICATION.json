@@ -1,0 +1,14 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "sessions": 6,
+    "segments": 84,
+    "active_angle_frames": 10696,
+    "active_seconds_approx": 534.8,
+    "active_5to25_frames": 0,
+    "reconstructed_extra_frames": 0,
+    "recorded_drive05_tx": 63891,
+    "final_live_source": "9da98d0c91f0559efa976e3ffb221f2584fd0b88 / 18175406d0cc5af8233afde70a5d121aedf8de44; both clean; offroad",
+    "device_mutations": 0
+  }
+}

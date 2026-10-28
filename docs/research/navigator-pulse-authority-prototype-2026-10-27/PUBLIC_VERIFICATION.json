@@ -1,0 +1,23 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "verification_passed": true,
+    "candidate_controller_gates_passed": false,
+    "selection": "rejected_do_not_integrate",
+    "source_pair_unchanged": true,
+    "parent": "df788e02719c05595dab2f980e6fd9fb9e464006",
+    "child": "1d29e6e78abcbf5c6a80eb397d80b349c6cca960",
+    "segments": 237,
+    "routes": 14,
+    "callbacks": 685504,
+    "complete_input_segments": 225,
+    "diagnostic_only_segments": 12,
+    "focused_tests": 26,
+    "recorded_feedback_producer_reproduction_steps": 107945,
+    "native_added_rejections": 0,
+    "native_added_relay_faults": 0,
+    "native_slots": 685398,
+    "prototype_physical_improvement_established": false,
+    "device_access_or_changes": false
+  }
+}

@@ -1,0 +1,12 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+# Powered Chestnut retest plan
+
+Owner clarification: Chestnut requires ignition ON for power. Earlier ignition-off model successes demonstrate short initialization only; subsequent PCIe failures in that environment do not establish a new-model regression. The current installed model recovered after the cold cycle and ran at20.03Hz,39.32ms mean,zero drops,withPCIeLTSSM0x78 and no supply fault. Active source remains2aa86b78d,AlphaON,vehicle stationaryPark,assistanceoff.
+
+A valid staged-model test requires GPU power and exclusive GPU access. No activation or tuning is part of this plan.
+
+1. Obtain approval for a brief interruption of the current app. Owner turns ignition OFF while retaining Comma power/WiFi and AlphaON. Passively verify real ignitionOFF/noOutput/controlsdisengaged and current exact source/settings. Capture fresh private settings hashes. Stop comma.service only in this state. Do not disable the service or change source/settings/OS/firmware. No Panda or vehicle ECU queries.
+2. Owner turns ignition ON and remains inPark. The app is intentionally stopped,soits display/assistance are unavailable. Record explicit owner readiness against current bootID; do not treat staleIsOffroad as powered-state proof.
+3. Run a bounded isolated candidate-only test with only ChestnutUSB exposed,vehicledevicesmasked,networkdown,privateparams/cache/logs,activeinstallreadonly,no privileges. Require liveappinactive and no manager/modeld/pandad/card/controlsd beforeandthroughouttest. Two sequential starts,35syntheticinferences each,GCdisabledlikeproduction. Preserve separate receipts. No realvehiclecontrol/CANpublishing. Stop on failure; do not retry or update firmware as a workaround.
+4. Owner turns ignition OFF again. Restore only the same original comma.service after explicit confirmation. Passively verify fresh real ignitionOFF/noOutput,source/settings/Alpha preserved,and normal app response. Record intentional service PID change; no source activation. If connectivityfails,the owner can turn ignitionOFF and reboot to restore the unchanged enabled original app.
+5. Readiness for activation remains separate. Proper-powered startup results supersede the unsupported-power interpretation of priorfailures; do not claim universal reliability or20Hzproduction cadence from a synthetic test.

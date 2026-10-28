@@ -1,0 +1,80 @@
+{
+  "schema": 1,
+  "snapshot_date": "2026-10-28",
+  "tuning_complete": false,
+  "automatic_device_restore": false,
+  "reference": {
+    "repository": "https://github.com/adgower/bluepilot.git",
+    "branch": "docs/navigator-reference",
+    "base_commit": "f43e3f5a64ab16a501f74911c5b74e0903d67c10"
+  },
+  "parent": {
+    "repository": "https://github.com/adgower/openpilot.git",
+    "branch_hint": "codex/navigator-tracking-release",
+    "commit": "e05e42f43d2907a4f02915a924cfd95a46197e79"
+  },
+  "opendbc": {
+    "repository": "https://github.com/adgower/opendbc.git",
+    "path": "opendbc_repo",
+    "branch_hint": "codex/navigator-tracking-release",
+    "commit": "5097b993965b2b65ea3fcca7e3769cfa9403d49c"
+  },
+  "submodule_gitlinks": {
+    "msgq_repo": "a95f3c1c5e7a4d84b193433a2a04d20c7a72878c",
+    "opendbc_repo": "5097b993965b2b65ea3fcca7e3769cfa9403d49c",
+    "panda": "a59195163c32a3a375ea6c86715dc08fd0984c1b",
+    "rednose_repo": "d7c66e80d2d28a63d0720692ccaa029d504751ba",
+    "teleoprtc_repo": "f19ceb4553d1d9ccd46cc86f47483564814423ec",
+    "tinygrad_repo": "02e698160eed1751738212144a7ea2cfb160b3f1"
+  },
+  "source_file_sha256": {
+    ".gitmodules": "9007815828738ab78344e1d45223626fdfad294ff8ab457635f1f1526467f720",
+    "pyproject.toml": "77511f377509c7b8d96a87fa8814eae0f190bd25dbb1aeac07a68c77cf213e70",
+    "uv.lock": "d30615071506ebb151c9dbb736426d5d865d22f18c4153aab4be7f361c9844f0",
+    "launch_env.sh": "353e017ca9f20de1ae61769de00f0841350366ca0466704a03628f01af84a0c5",
+    "opendbc_repo/opendbc/car/ford/lateral_angle.py": "b6efca4276beca57f1e82a07717f9453d40728df62b0b16ce1cc6b252ee5c57c",
+    "opendbc_repo/opendbc/car/ford/values.py": "e2c8521f3c4314f51d9eab3675866d2049e80b59d01e14fd172dd172fb2a738d",
+    "opendbc_repo/opendbc/car/ford/pinion.py": "8592a578a68a312be632a196eb357bb09d9cadf9f3150d94c72a60a5ddae3df8"
+  },
+  "requirements": {
+    "source_agnos_version": "20.1",
+    "python": ">=3.12.3,<3.13",
+    "python_lockfile": "uv.lock",
+    "models_and_firmware": "Retrieve/build via the pinned source workflow; no binary assets or OS recovery images are exported."
+  },
+  "owner_source_mapping": {
+    "file": "opendbc_repo/opendbc/car/ford/lateral_angle.py",
+    "low_speed_angle_factor": 1.2,
+    "high_speed_angle_factor": 0.97,
+    "scope": "Preserve the original Navigator/forced-Expedition mapping scope and paired safety geometry; not universal gains or live parameter keys."
+  },
+  "forced_identity": "FORD_EXPEDITION_MK4",
+  "observed_nonsecret_settings": {
+    "DisableUpdates": "1",
+    "FordPrefHighSpeedTracking": "1",
+    "FordPrefRollAwareMapping": "1",
+    "FordPrefPersistentTracking": "1",
+    "FordPrefSteerAngleCurvature": "1",
+    "FordPrefLowSpeedGain": "1",
+    "AlphaLongitudinalEnabled": "1",
+    "InitialCruiseSpeedKph": "40",
+    "FordPrefLongitudinalCoordination": "1",
+    "LongitudinalPersonality": "0",
+    "ExperimentalMode": null,
+    "LongitudinalManeuverMode": null,
+    "LateralManeuverMode": null
+  },
+  "settings_scope": "Scoped historical observation, not every prior setting and not an automatic restore list. Missing keys do not establish runtime defaults.",
+  "private_dependencies": [
+    "Owner recordings and detailed input manifests for road replay",
+    "Fresh private parameter/source backups before migration",
+    "Recovery material and hardware-specific validation"
+  ],
+  "known_open_items": [
+    "City/highway longitudinal pulsing",
+    "High-RPM/shift behavior with unresolved decoded RPM quality",
+    "Low-speed steering shortfall and some unwind/excess behavior",
+    "Sparse latest higher-speed road coverage"
+  ],
+  "device_actions_performed_by_this_export": 0
+}

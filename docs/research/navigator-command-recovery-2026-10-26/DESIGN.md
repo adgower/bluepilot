@@ -1,0 +1,18 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+# Bounded command recovery research spike
+
+Authorized offline experiment only; keep paired2ca969e45/bcd706d0 and1.20/0.97 untouched. The former debt-account design failed through mode-history divergence and repayment overshoot. First positive crossover in highway-pulsing-session-02 occurs at producer-relative1455.638s with0.17986 pending debt and a0.001 added I step.
+
+Alternatives: keep tuning repayment (rejected after repeated failures); maintain a full baseline consumer/controller as an output oracle (rejected as replay-specific and no physical response reference); remove artificial integral repayment and test a transient positive-command reduction (chosen for this local spike).
+
+Use existing narrow moving-restart qualification and0.25/3s budget to accumulate a negative output offset from native positive integral capacity, without artificial integral repayment. Native state transitions and PID mechanics are retained; freeze logic includes installed actuator constraints plus the explicit local output constraint described below, using actual returned feedback. Apply offset only to positive requested propulsion with positive planner demand, active valid same-owner fresh protocol feedback and no pedals/stop/urgent demand. Do not turn positive demand negative. Fresh unlimited drive feedback permits reduction to unwind at0.1 per second (max0.001/update), within3–12m/s; actual PID reset clears the offset. Invalid/changed epoch suppresses overlay rather than inventing permission. No brake/clearance/deadline/safety/planner/steering changes.
+
+This does not guarantee unchanged native integral relative to a separate baseline, because changed returned feedback may still change native freeze decisions. Full replay gates remain: no added timeout/lostactivity/weaker strong-target encoded braking/new positivegas with retainedtorque; named city and highway regressions explicit. A failed full run rejects this architecture variant; do not sweep parameters or add an oracle to pass. Physical comfort/RPM/ECU response remains unknown under frozen motion.
+
+Review correction: same-epoch command sequence must advance strictly. Epoch changes, sequence rollback/repeat or callback clock discontinuity invalidate the transient overlay and rolling qualification without resetting native PID. The invalid callback cannot apply or admit an overlay. Counter records discarded reduction. Abrupt native fallback under invalid continuity is not a comfort guarantee; production transport/permission remains authoritative.
+
+## Local-constraint anti-windup refinement
+
+The full transient-only v2 comparison removes addedtimeouts but retains106weaker encodedstrongbrake rows (alloneLSB). In both affectedroutes, reducedraw demand causes early unlimited-drive feedback while the nativeproducer stillwants the unreduced request. It integrates positiveerror whereas reference remains ramp-limited, leaving +0.000345/+0.002989Ioffset. No repayment is involved.
+
+Refinement: nativePID stilladvances withactualfeedback, but positiveintegration also freezes against its own active known outputconstraint (3–12m/s, positiveerror/target, validcontext, nobrake/precharge/referencebrake, numericalgas>=0 and unreducedwanted exceedsactualgas byexisting0.011resolution). This adds nofeedbackfield orpermission and preserves signednegativeerrorrecovery. It replaces the initial claim of byte-nativeintegralupdate; logic nowacknowledges bothsoftwareandactuatorconstraints. Fullreplaydecides acceptability.

@@ -1,0 +1,9 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "all_pass": true,
+    "rearm_variant_changed_frames": 0,
+    "source_clean": true,
+    "scope": "Diagnostic-only exact recording and existing research prototype replay. Frozen motion cannot demonstrate physical improvement. No production source or device changes."
+  }
+}

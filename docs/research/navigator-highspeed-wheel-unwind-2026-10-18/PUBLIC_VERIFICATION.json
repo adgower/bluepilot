@@ -1,0 +1,14 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "paired_heads_and_protected_hashes_unchanged": true,
+    "paired_tracked_state_clean": true,
+    "owner_1p20_0p97_and_fixed_geometry_preserved": true,
+    "raw_model_input_segments_hash_reverified": 71,
+    "analysis_source_cache_hashes_verified": true,
+    "wheel_target_reconstruction_max_error_deg": 1.0362435496347189e-06,
+    "exact_send_time_formula_and_no_release_tail_checks_pass": true,
+    "timestamps_and_eligible_subset_checks_pass": true,
+    "scope": "Read-only saved-log diagnostics; no control behavior change, device access, CAN transport, physical trajectory proof or new full safety replay. Model lanes and learned yaw/geometry have correlated uncertainty."
+  }
+}

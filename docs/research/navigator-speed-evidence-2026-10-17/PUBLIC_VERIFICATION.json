@@ -1,0 +1,18 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "raw_segments_hash_verified": 515,
+    "sessions": 27,
+    "new_segments": 129,
+    "new_sessions": 6,
+    "raw_bytes": 4317918432,
+    "normalized_inputs_verified": 27,
+    "new_signal_bindings_verified": 6,
+    "phase_direction_totals_match": true,
+    "frozen_55_60_model_not_refit": true,
+    "new_only_55_60_episodes": 62,
+    "onset61_reconstruction_within_half_wire_step": true,
+    "device_changes": 0,
+    "control_map_changes": 0
+  }
+}

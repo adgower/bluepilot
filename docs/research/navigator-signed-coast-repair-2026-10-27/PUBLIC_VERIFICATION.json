@@ -1,0 +1,26 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "verification_passed": true,
+    "local_regression_gates_passed": true,
+    "segments": 237,
+    "complete_input_segments": 225,
+    "diagnostic_prefix_segments": 12,
+    "routes": 14,
+    "callbacks": 685504,
+    "recomputed_producer_steps": 1311408,
+    "focused_tests": 32,
+    "added_faults": 0,
+    "weaker_braking_requests": 0,
+    "raw_integral_gas_differences": 0,
+    "changed_packets_only_clear_precharge": 627,
+    "native_replaced_slots": 685398,
+    "native_added_rejections": 0,
+    "native_relay_faults": 0,
+    "reference_reuse": "retained baseline hashes and unchanged runtime verified; not newly run",
+    "paired_source_clean_unchanged": true,
+    "device_access_or_changes": false,
+    "production_protocol_migration": false,
+    "physical_pulsing_improvement_established": false
+  }
+}

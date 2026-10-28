@@ -1,0 +1,22 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "artifact_and_source_checks_passed": true,
+    "controller_accepted": false,
+    "pulsing_resolved": false,
+    "local_tests_passed": 14,
+    "fresh_coupled_segments": 29,
+    "fresh_coupled_routes": 2,
+    "callbacks_per_variant": 83412,
+    "producer_steps_per_variant": 158301,
+    "descriptive_comparison_original_segments": 131,
+    "combined_unique_original_evidence": 152,
+    "observed_pairs": 13,
+    "independent_physical_grade_or_coast_authority_identified": false,
+    "full316_replay": false,
+    "new_native_drive_replay": false,
+    "device_contact": false,
+    "expected_acceptance_gate_exit": 1,
+    "prior_frozen_artifacts_verified": 21
+  }
+}

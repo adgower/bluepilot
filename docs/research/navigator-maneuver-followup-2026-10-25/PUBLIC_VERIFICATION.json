@@ -1,0 +1,15 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "download_verified": true,
+    "source_matched": true,
+    "new_recorded_controls_mismatch_episodes": 0,
+    "all_21_tool_runs_finished": true,
+    "uninterrupted_valid_runs": 19,
+    "pedal_interrupted_runs": 2,
+    "three_progressing_releases_longer_than_old_deadline_completed": true,
+    "no_postfix_normal_highway_active_exposure": true,
+    "preinstall_highway_cycling_confirmed": true,
+    "device_mutations": 0
+  }
+}

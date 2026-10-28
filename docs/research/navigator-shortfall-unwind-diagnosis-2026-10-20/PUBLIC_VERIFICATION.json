@@ -1,0 +1,9 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "paired_source_clean": true,
+    "device_access": false,
+    "production_source_changes": false,
+    "scope": "Trace parity and actual native DBC encoding only; not a new safety replay or physical handling validation."
+  }
+}

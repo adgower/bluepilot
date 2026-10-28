@@ -1,0 +1,12 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+# Software clamp versus parking capability
+
+The clamp observed in the22–25mph trace is application software: the angle controller clips curvature to fixed pinion curvature ±0.002/m above9m/s, before converting it into path angle. The executed code is opendbc/car/ford/lateral_angle_bounded_tracking.py:74–80. This is not a measurement of maximum physical wheel angle or EPS motor torque. The recorded target is rising faster/further than the permitted command in this episode.
+
+A separate Panda safety check verifies shadow curvature against measured curvature above its own10m/s threshold, plus command range/rate, vehicle state and driver controls. Application clipping, native rejection and vehicle refusal are different layers. There is no rejected-command echo in the focused severe low-speed window; application clipping is already in effect. The vehicle's own EPS/IPMA mode permissions remain a third layer, not established by these logs.
+
+Physical steering capability does not establish permission or authority for every electronic command mode. Lincoln describes Active Park Assist2.0 as a parking workflow: first stop, select Neutral, release the brake and hold the Park Assist button; the feature then automates steering, shifting, braking and acceleration. That is not evidence that the on-road path-angle interface being used here grants unrestricted wheel-angle control at22mph or74mph. OEM public instructions do not document the bus-level EPS acceptance envelope. Whether this particular vehicle has the full compatible factory parking hardware/configuration also remains a separate evidence question from historical cached module identifiers.
+
+OEM source verified through BrowserOS on October21,2026: [Lincoln Active Park Assist instructions](https://www.lincoln.com/support/how-tos/lincoln-technology/driver-assist-features/how-do-i-use-the-active-park-assist-feature-in-my-lincoln-vehicle/). It supports the parking workflow, not a claimed EPS protocol specification. Distinct-mode/authority limitations are engineering inference, not a quoted factory limit.
+
+This prototype retains application/native limits and gains1.20/.97. It sends no parking commands, does not alter steering modes, and does not enable full control or assert that removing software limits would be safe or accepted by the vehicle.

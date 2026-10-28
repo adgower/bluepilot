@@ -1,0 +1,17 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "focused_tests_passed": 110,
+    "native_full_replay_routes": 32,
+    "native_full_replay_segments": 637,
+    "configured_generated_native_rejections_added": 0,
+    "exact_recorded_timing_encoded_changes": 404,
+    "exact_recorded_timing_rejections_added": 0,
+    "exact_recorded_timing_shared_baseline_rejections": 32,
+    "preserved_underresponse_counterexamples": 14,
+    "installed_source_and_owner_settings_preserved": true,
+    "device_access": false,
+    "device_mutations": false,
+    "scope": "Native Mac debug and frozen-input evidence only; no closed-loop trajectory/handling, wire, H7/ARM or install readiness."
+  }
+}

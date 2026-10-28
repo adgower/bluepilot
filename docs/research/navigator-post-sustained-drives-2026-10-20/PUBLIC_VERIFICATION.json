@@ -1,0 +1,13 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "verified_segments": 26,
+    "sessions": 3,
+    "intervention_groups": 20,
+    "active_no_driver_wire_frames": 11057,
+    "within_half_wire_step": 11056,
+    "known_outliers": 1,
+    "changed_vs_previous_policy": 69,
+    "device_mutations": 0
+  }
+}

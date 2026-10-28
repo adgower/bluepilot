@@ -1,0 +1,2 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+Initial pitch wrapper was discarded by the production disabled-owner reset. Identical output counts exposed the inactive intervention. Corrected wrapper attachment is checked at each callback; these runs are diagnostic in-memory input sensitivities only, not deployable filtering. Results regenerated after correction.

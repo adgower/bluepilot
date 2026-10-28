@@ -1,0 +1,15 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "sessions": 28,
+    "segments": 540,
+    "physical_rx_frames": 124787149,
+    "controller_updates": 3134371,
+    "wire_envelope_checked_frames_including_two_input_variants": 1253772,
+    "default_off_byte_identical": true,
+    "below60_generated_stream_identical": true,
+    "40to50_generated_stream_identical": true,
+    "all_workers_same_unchanged_source_snapshot": true,
+    "scope": "Native debug hooks and frozen saved-input command replay, not hardware, sanitizer, forwarding, or closed-loop vehicle validation."
+  }
+}

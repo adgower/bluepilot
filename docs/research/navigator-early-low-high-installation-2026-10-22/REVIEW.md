@@ -1,0 +1,2 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+Independent read-only reviewer review_onset_installer found stale powered acceptance commit references; corrected to target pair and added regression. Latest review reported no remaining material findings across staging hashes, fresh native gates, carried evidence, isolation, preservation, activation and rollback. Staged helper corrected under expected-old/new SHA256 verification; see helper-patch-receipt.json.

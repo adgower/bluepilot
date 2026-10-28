@@ -1,0 +1,16 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "verdict": "share_with_caveats",
+    "raw_segments": 34,
+    "contiguous_sessions": 3,
+    "source_filter": "exact initData parent SHA/clean; current paired pin verified",
+    "raw_and_derived_hashes_verified": true,
+    "all_active_consumed_state_and_target_inputs_match": true,
+    "no_eligible_patch_admission_exposure": true,
+    "controlsMismatch_events": 0,
+    "independent_health_and_lateral_reviews": true,
+    "causal_before_after_improvement_proved": false,
+    "device_source_settings_service_mutations": 0
+  }
+}

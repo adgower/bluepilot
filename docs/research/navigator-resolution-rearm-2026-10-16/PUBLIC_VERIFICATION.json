@@ -1,0 +1,22 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "sessions": 21,
+    "segments": 386,
+    "physical_rx_frames": 88982329,
+    "controller_updates": 2235484,
+    "baseline_tx_accepted": 1400055,
+    "candidate_tx_accepted": 1400055,
+    "baseline_tx_rejected": 0,
+    "candidate_tx_rejected": 0,
+    "new_rejections": 0,
+    "different_updates": 19,
+    "ge25_updates_different": 0,
+    "ge45_updates_different": 0,
+    "default_off_all_updates_identical": true,
+    "ge25_all_generated_bytes_identical": true,
+    "ge45_all_generated_bytes_identical": true,
+    "device_changes": 0,
+    "scope": "Frozen-input generated-TX/native-safety replay, not closed-loop vehicle or road validation."
+  }
+}

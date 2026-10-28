@@ -1,0 +1,24 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "routes": 28,
+    "segments": 540,
+    "all_replay_results_and_tx_hashes_identical_to_validated_prototype": true,
+    "scene_identical": true,
+    "exact_recorded_native_identical": true,
+    "protected_sources_settings_snapshot_native_library_unchanged": true,
+    "build_and_suite_steps_passed": 5,
+    "physical_rx": 124787149,
+    "controller_updates": 3134371,
+    "configured_accepted_per_variant": 2004203,
+    "additional_recorded_rejections": 0,
+    "paired_checkouts_clean": true,
+    "final_parent_pin_verified": true,
+    "post_commit_minimal_full_panda_passed": true,
+    "all_replayed_runtime_source_hashes_match_final_commits": true,
+    "parent_tests_passed": 1018,
+    "parent_subtests_passed": 343,
+    "child_tests_passed": 3953,
+    "child_subtests_passed": 24673
+  }
+}

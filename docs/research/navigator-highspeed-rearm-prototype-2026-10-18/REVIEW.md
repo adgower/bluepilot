@@ -1,0 +1,2 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+Independent read-only source review found no important new correctness issue. Reviewed provisional peak restoration, interrupted history, fresh cadence, current body/wheel admission, default-off delegation and inherited bounds. Documentation corrected to describe the five/six-sample retained window. Review was static; it did not independently execute tests or establish vehicle behavior.

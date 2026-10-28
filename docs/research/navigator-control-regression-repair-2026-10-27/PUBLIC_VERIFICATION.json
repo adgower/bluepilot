@@ -1,0 +1,11 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "verification_passed": true,
+    "local_regressions_resolved_in_saved_replays": true,
+    "paired_source_clean_unchanged": true,
+    "device_access_or_changes": false,
+    "production_integration_or_installation": false,
+    "physical_pulsing_or_steering_improvement_established": false
+  }
+}

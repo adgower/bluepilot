@@ -1,0 +1,15 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "local_parent": "2ca969e45afee229d7ec5c03c8768e137410c8d1",
+    "local_child": "bcd706d02fd6b8159b1eadcb6b2a56b504f69567",
+    "paired_worktrees_clean": true,
+    "lateral_source_identical_to_commit": true,
+    "raw_source_segments_rehashed": 176,
+    "tests_passed": 48,
+    "candidate_gate": "rejected",
+    "no_native_arm_or_physical_validation_claim": true,
+    "device_operations": 0,
+    "review": "coverage finding resolved; no remaining actionable findings"
+  }
+}

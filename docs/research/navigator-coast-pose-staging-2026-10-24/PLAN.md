@@ -1,0 +1,2 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+Publish exact verified pair; userconfirmed parked/ignitionoff/stablepower/WiFi. Fresh private device/Mac backup, inactive separate stage, isolated ARM build/offline tests and passive offroad preservation checks. No activation, service restart, parameters, OS/firmware or CAN writes. Keep1.20/.97. Quiet-release excluded.

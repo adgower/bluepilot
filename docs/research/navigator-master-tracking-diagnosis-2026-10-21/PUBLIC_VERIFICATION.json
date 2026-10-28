@@ -1,0 +1,19 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "instrumentation_preserves_every_reconstructed_row": true,
+    "all_4466_active_unpressed_commands_match_wire": true,
+    "all_low_commands_deviation_clipped": true,
+    "clipped_target_mismatch_28_frames": true,
+    "original_atomic_target_consistent": true,
+    "low_output_equals_clipped_feedforward": true,
+    "low_feedback_fresh_valid": true,
+    "high_trim_activates_but_below_4percent": true,
+    "no_final_slew_binding": true,
+    "no_highway_roll_map_or_earlier_onset": true,
+    "parent_exact_clean": true,
+    "child_exact_clean": true,
+    "all_85_protected_child_hashes_unchanged": true,
+    "owner_factors_unchanged": true
+  }
+}

@@ -1,0 +1,8 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+# Fresh device backup; installation not performed
+
+2026-10-15. Backup saved privately to `${USER_HOME}/CommaBackups/<private timestamp identifier>-readonly-pre-paired-install-request`. Device remains on clean parent74f66e7a0bf1dc0718431532948ece2c4fb0041c / child1b965caadd4a6aea4d09985532bf7cca6c0873ca. Current clean commits match the previous verified backup, so verified tracked-source archives were copied locally; full current parameter snapshot and before/after inventory were newly read over SSH. Source and selected settings unchanged through capture. Backup covers tracked source and parameters; it excludes OS, git history, model weights, recordings and untracked artifacts.
+
+Passive15s baseline:150 Panda samples, offroad/ignition off/noOutput/controls disallowed, no RX fault or unexpected stopped processes; historical TX-blocked counter6 throughout.1.20/0.97 confirmed. No carState/carControl topics offroad, so powered stationary acceptance is not verified. This is the existing installation's baseline, not post-install validation.
+
+No installation, parameter write, service stop/restart, reboot, ECU query, OS or firmware update performed. Requested deployment of the experimental steering revision was declined because actual hardware message-timing and steering-response validation remain absent. The paired local commits0cc74c94f/d64ffcfa remain available for offline engineering review and validation; local test results are recorded in the prior paired integration report.

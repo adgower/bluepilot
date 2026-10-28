@@ -1,0 +1,10 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "sessions": 9,
+    "segments": 79,
+    "signal_and_normalized_hashes_verified": true,
+    "all_sessions_include_source_cohort": true,
+    "candidate_missing_stream_session_09_qualified_seconds": 0.0
+  }
+}

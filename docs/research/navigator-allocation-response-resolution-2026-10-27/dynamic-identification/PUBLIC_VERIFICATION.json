@@ -1,0 +1,22 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "verified": true,
+    "scope": "Origin-only descriptive forecasts and secondary sensitivity; no causal authority/plant validation",
+    "original_input_segments": 175,
+    "sources": 17,
+    "contributing_sessions": 14,
+    "anchors": 53356,
+    "stationary_origins": 0,
+    "raw_segment_overlap": 0,
+    "numerical_field_bindings_checked": 2612384,
+    "holdout_grain": "Whole sessions; no random-window train/test split",
+    "primary_oem_training_sessions": 2,
+    "primary_alpha_training_sessions": 1,
+    "secondary_alpha_training_sessions": 7,
+    "secondary_is_retrospective": true,
+    "earlier_controller_candidate_unchanged": true,
+    "new_controller_fix": false,
+    "full_candidate_or_native_replay": false
+  }
+}

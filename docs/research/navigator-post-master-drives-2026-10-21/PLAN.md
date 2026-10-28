@@ -1,0 +1,2 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+Read-only download of all new completed recent recordings against prior acquisition inventories. Verify hash/completion/source/settings before and after; isolate recorded software revisions; review all 5mph bands, phases and input/disengagement events. Compare descriptively to prior runs without causal claims; no device changes. Raw identifiers/GPS remain in private cache.

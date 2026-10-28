@@ -1,0 +1,24 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "sessions": 27,
+    "segments": 515,
+    "controller_updates": 2986854,
+    "physical_rx_frames": 118905779,
+    "steering_tx_evaluations": 597382,
+    "mapped_steering_evaluations": 23477,
+    "changed_final_steering_outputs": 23470,
+    "changed_generated_controller_updates": 17520,
+    "zero_internal_mapping_release_frames": 5,
+    "zero_internal_mapping_release_area_rad_s": 0.00046967963422429437,
+    "zero_internal_mapping_release_peak_rad": 0.005705265279737734,
+    "default_off_byte_identical": true,
+    "mapping_disabled_byte_identical_to_installed": true,
+    "changed_outputs_at_or_below50mph": 0,
+    "changed_outputs_at_or_above70mph": 0,
+    "max_mapping_term_rad": 0.01,
+    "max_final_difference_rad": 0.010000000000000016,
+    "max_mapped_parameter_age_s": 0.053789289,
+    "note": "mapping_active_updates in per-route raw receipts counts held strategy state on 100Hz controller ticks. Counts here use 20Hz steering TX evaluations. Native replay uses saved RX and changed candidate TX; it does not regenerate physical response, identify bus arrival latency, or validate hardware/road behavior."
+  }
+}

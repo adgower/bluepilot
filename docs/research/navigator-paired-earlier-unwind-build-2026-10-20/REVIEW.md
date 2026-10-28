@@ -1,0 +1,2 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+Fresh-context integration review: no material findings. Reviewed the new child policy and portable tests, parent factory and regression, and integration documentation. Existing prerequisites, default-off behavior and inherited limits remain intact. Reviewer performed read-only source review; full tests/builds are separate receipts.

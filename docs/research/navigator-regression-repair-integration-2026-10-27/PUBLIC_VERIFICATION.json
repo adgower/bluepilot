@@ -1,0 +1,22 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "local_integration_passed": true,
+    "postcommit_builds_passed": true,
+    "parent_tests_passed": 1107,
+    "child_tests_passed": 4733,
+    "longitudinal_replay_segments": 237,
+    "longitudinal_consumer_callbacks": 685504,
+    "longitudinal_producer_steps": 1311408,
+    "longitudinal_port_differences": 0,
+    "retained_release_faults": 2,
+    "added_faults": 0,
+    "steering_scheduled_parity_segments": 658,
+    "steering_routes": 33,
+    "device_access": "read-only acquisition of14newsegments; before/after audits unchanged",
+    "published": false,
+    "installed_or_activated": false,
+    "fresh_native_route_replay": false,
+    "physical_pulsing_improvement_established": false
+  }
+}

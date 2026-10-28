@@ -1,0 +1,23 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "downloaded_sessions": 4,
+    "downloaded_segments": 97,
+    "source_and_settings_stable": true,
+    "recorded_source_verified_each_route": true,
+    "active_no_driver_candidate_halfstep_match": true,
+    "below60_recorded_command_parity": true,
+    "all62_input_groups_exported": true,
+    "native_original_rx_frames": 22703325,
+    "native_rx_invalid": 0,
+    "active_angle_echoes": 7,
+    "brake_edge_evidence_all7": true,
+    "native_active_angle_reproduced": 4,
+    "native_active_angle_not_reproduced": 3,
+    "video_frames": 400,
+    "video_duration_s": 20,
+    "overlay_sync_ages_verified": true,
+    "road_improvement_proved": false,
+    "device_changes": 0
+  }
+}

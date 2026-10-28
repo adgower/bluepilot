@@ -1,0 +1,10 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "passed": true,
+    "sessions": 11,
+    "new_segments": 79,
+    "baseline_segments": 14,
+    "numeric_rows_checked": 5531638
+  }
+}

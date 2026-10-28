@@ -1,0 +1,16 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "all_pass": true,
+    "segments": 103,
+    "bytes": 851163756,
+    "sessions": 11,
+    "recorded_minutes": 98.47137565116667,
+    "assisted_minutes": 38.09916666666667,
+    "active_no_driver_wire_packets": 43934,
+    "new_policy_changed_frames": 0,
+    "intervention_windows": 50,
+    "anomaly_episodes": 6,
+    "scope": "Read-only cached observational audit; no vehicle control, no inferred alternative trajectory, no causal improvement proof."
+  }
+}

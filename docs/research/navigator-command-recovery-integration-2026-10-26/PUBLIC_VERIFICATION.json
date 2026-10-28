@@ -1,0 +1,20 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "parent": "1dbbc01892616c4b1a5c7c841d132f724ea5132c",
+    "child": "beb10c25770471534261606072c131db5eefa117",
+    "parent_gitlink": "beb10c25770471534261606072c131db5eefa117",
+    "branches": "codex/navigator-tracking-release",
+    "paired_clean": true,
+    "steering": "1.20/0.97 unchanged",
+    "source_binding_match": true,
+    "callbacks": 570269,
+    "producer_updates": 1104297,
+    "equivalence_differences": 0,
+    "native_evidence": "hash-bound reuse; not a fresh integrated native replay",
+    "no_push": true,
+    "no_device_access": true,
+    "arm_build": false,
+    "hardware_validation": false
+  }
+}

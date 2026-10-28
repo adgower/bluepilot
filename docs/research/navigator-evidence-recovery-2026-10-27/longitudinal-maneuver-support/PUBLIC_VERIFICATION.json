@@ -1,0 +1,10 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "nine_original_clean_negative_phases": true,
+    "causal_independent_authority_identified": false,
+    "control_mode_classification_pending": false,
+    "second_session_comparison_pending": false,
+    "phase_state_clocks_distinct": true
+  }
+}

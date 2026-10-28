@@ -1,0 +1,17 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "passed": true,
+    "routes": 33,
+    "segments": 658,
+    "recorded_parity": true,
+    "calibration_fixture_parity": true,
+    "exact_result_and_admission_state_parity": true,
+    "production_schedule": "All context feeds at every retained controller tick; strategy calls only zero-based controller index modulo STEER_STEP=5 == 0. Full controller counts match retained native run for every route.",
+    "production_bytes_match_precommit_receipt": true,
+    "constructor_graph_state_and_aliases_equal_enabled_and_disabled": true,
+    "admission_observer_and_update_ast_identical": true,
+    "inherited_lateral_and_wire_module_hashes_equal_retained_native": 20,
+    "synthetic_exact_parity_frames": 9180
+  }
+}

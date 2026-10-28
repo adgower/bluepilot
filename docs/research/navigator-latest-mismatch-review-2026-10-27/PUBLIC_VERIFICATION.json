@@ -1,0 +1,13 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "passed": true,
+    "segments_verified": 14,
+    "startup_source_entries_verified": 14,
+    "exact_sequence_clock_race_verified": true,
+    "panda_order_verified": true,
+    "privacy_scan_passed": true,
+    "controller_execution": false,
+    "device_mutations": 0
+  }
+}

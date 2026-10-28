@@ -1,0 +1,16 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "decision": "clears_named_replay_failures_not_road_or_comfort_validation",
+    "focused_tests": 58,
+    "controller_segments": 197,
+    "callbacks": 570269,
+    "native_binary_and_headers_match": true,
+    "controller_source_bindings_match": true,
+    "city_full_route_wire_unchanged": true,
+    "highway_pulsing": "named windows unchanged; unresolved",
+    "extra_braking_seconds": 4.3486278750315,
+    "arm_build": false,
+    "hardware_validation": false
+  }
+}

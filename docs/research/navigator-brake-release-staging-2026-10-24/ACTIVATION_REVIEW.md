@@ -1,0 +1,2 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+Independent read-only review found no new critical/important blocker. Candidate hash guard applies only to candidate and executes before/after stop, after swap and final checks; original rollback is correctly exempt. Final powered audit requires owner AlphaON/ignitionON and is reserved for that step. Rollback path uses the established /data/openpilot.pre-* layout to avoid an absent parent directory.

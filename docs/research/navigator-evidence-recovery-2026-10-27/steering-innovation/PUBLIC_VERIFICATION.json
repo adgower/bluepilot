@@ -1,0 +1,10 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "same_anchor_comparison": true,
+    "original_can_label_quality_binding": "inherited independently verified original sensor receipt; raw CAN receive <= pre-residual endpoint <= T0-.25",
+    "poststart_angle_not_used_in_correction": true,
+    "same_shared_correction_both_prefixes": true,
+    "no_response_ground_truth_for_probe": true
+  }
+}

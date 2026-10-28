@@ -1,0 +1,14 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "passed": true,
+    "segments_rehashed": 73,
+    "sessions": 5,
+    "old_or_parked_sessions_separated": true,
+    "device_changes": 0,
+    "reported_mismatch_events": 0,
+    "qualified_assisted_peak_rpm": 3946,
+    "road_improvement_established": false,
+    "scope": "Acquisition and offline analysis verification; not controller safety replay or physical comfort validation."
+  }
+}

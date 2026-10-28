@@ -1,0 +1,4 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+# Post-sustained drive analysis
+
+Read-only SSH acquisition of all new segments since prior complete acquisition; private raw identities/GNSS and hash-verified logs. Verify live/source-recorded revision and exact post-install coverage; separate manual/disabled drives. Reuse prior eligibility/5mph bins/phase/clock definitions. Reconstruct actual send-time new production factory versus unchanged previous installed policy, verify new command vs recorded wire and correction budget/60–70unwind activations. Review every driver-pressure/disengagement/brake edge, faults and rejected echoes. Compare calibrated wheel/body tracking by direction/demand/phase/lag and matched route windows; do not confuse command deltas with physical causal improvement. Report material residuals and gaps, update roadmap; no device writes or control queries.

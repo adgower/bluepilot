@@ -1,0 +1,17 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "saved_drive_only": true,
+    "device_contact_or_mutations": 0,
+    "diagnostic_contracts_passed": 8,
+    "replayed_slots_per_variant": 65736,
+    "baseline_edges": 213,
+    "new_full_native_replay_or_build_performed": false,
+    "installation_ready": false,
+    "physical_cycling_resolved": false,
+    "raw_pose_cache_hash_verified": true,
+    "python": "3.12.14 (main, Aug 25 2026, <private clock time>) [Clang 22.1.3 ]",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1"
+  }
+}

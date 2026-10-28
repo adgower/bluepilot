@@ -1,0 +1,6 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+# Independent installer review
+
+Fresh read-only review of the adapted backup/stage/validation/prepare/activation helpers found no blocking issues. Only FordPrefHighSpeedTracking is intentionally enabled; existing roll mapping is protected. Rollback restores the former new-key value and the whole original installation, then verifies original source/preferences/calibration. Exact paired revisions, signed firmware/launchers and geometry hashes are guarded. ARM validation retains private parameters, read-only active source, blocked device nodes, no network and unprivileged execution. All eight selector combinations are covered by constructor checks. All14 Python scripts parse and isolate.sh passes bash syntax validation. This review is static; ARM results and parked telemetry are separate gates.
+
+Execution found a retained helper assertion with the old private isolation-prefix name. Corrected only that assertion, retained the passing440 native tests and320-case transition receipts, and resumed the isolated pipeline gate. It passed with the same live-source/service/preferences preservation result. The powered-check helper also uses the exact new paired SHAs and new preference key. No candidate source changes.

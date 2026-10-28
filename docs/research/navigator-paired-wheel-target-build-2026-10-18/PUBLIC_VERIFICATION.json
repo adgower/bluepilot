@@ -1,0 +1,10 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "class_ast_equivalent": true,
+    "new_tests_and_corrected_helper_ast_equivalent": true,
+    "preserved_old_controller_owner_gains_geometry_safety_factory_inputs_and_settings_snapshot": true,
+    "build_and_suite_steps_passed": 5,
+    "scope": "Configured local Mac builds/suites. No Comma contact, CAN transport, physical tracking, ARM/AGNOS boot or install proof."
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "segments_verified": 335,
+    "routes": 19,
+    "raw_bytes": 2788299892,
+    "tests_passed": 31,
+    "cache_bindings_and_payload_digests_verified": 19,
+    "raw_staging_exact_verified": 19,
+    "whole_route_split_verified": true,
+    "max_recorded_mph": 74.0053061510549,
+    "controller_maps_proposed": 0,
+    "device_changes": 0,
+    "native_controller_or_firmware_changes": 0,
+    "status": "Offline implementation complete; no physical low-speed fix established; unsupported calibration abstains."
+  }
+}

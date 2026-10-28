@@ -1,0 +1,4 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+# Coordinated coast/brake activation — October27
+
+User explicitly authorized activation and parked checks, confirmed parked/ignitionOFF/stable power+WiFi/screen+cables. Current AlphaON remains unchanged. Verify staged exactdf788e027/1d29e6e7 vs active1dbbc0189/beb10c25. Fresh parameter/calibration snapshot and verified private Mac copy precede service stop. Whole-install atomic exchange with retained complete rollback, original firmware/OS/launchers and1.20/0.97. No firmware/OS update, no extra ECU queries or manual CAN commands. New-source offroad/no-output checks precede user confirmation of responsive home screen and powered stationaryPark with assistance disengaged. Final powered checks passive; no road-safety/comfort promise.

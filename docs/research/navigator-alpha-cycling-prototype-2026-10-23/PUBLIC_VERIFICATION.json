@@ -1,0 +1,23 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "local_prototype_only": true,
+    "installation_ready": false,
+    "paired_sources_clean": true,
+    "device_access_or_mutations": 0,
+    "new_contracts_passed": 11,
+    "retained_coordination_tests_passed": 33,
+    "retained_ford_tests_passed": 886,
+    "retained_ford_skipped": 79,
+    "retained_ford_subtests_passed": 12083,
+    "test_counts_overlap_note": "33 includes32child contracts also present in886Ford tests, plus actual parent restart test.",
+    "slots_compared": 65736,
+    "brake_edges_baseline": 213,
+    "brake_edges_candidate": 179,
+    "exported_replay_identical": true,
+    "native_rx_per_variant": 5260361,
+    "native_acc_slots_per_variant": 65728,
+    "native_shared_rejections": 3,
+    "native_added_candidate_rejections": 0
+  }
+}

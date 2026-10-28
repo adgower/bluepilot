@@ -1,0 +1,21 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "passed": true,
+    "routes": 14,
+    "segments": 237,
+    "consumer_rows": 685504,
+    "wire_packets": 685504,
+    "producer_rows": 1311408,
+    "changed_consumer_semantic_fields": 0,
+    "changed_wire_packets": 0,
+    "changed_producer_rows": 0,
+    "fault_lists_equal": true,
+    "added_faults": 0,
+    "retained_faults": 2,
+    "counters_equal": true,
+    "source_invariance_assertion_passed": true,
+    "fresh_native_replay": false,
+    "native_applicability_receipt": "native-applicability.json"
+  }
+}

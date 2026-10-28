@@ -1,0 +1,6 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+# Authorized sustained/unwind installation
+
+User confirms parked ignition off, stable power/Wi-Fi, screen/recovery cables. Existing adgower destinations approved. Publish exact pair child then parent without force; verify remote heads. Fresh passive inventory and backup all params/source/launchers/signed firmware, verify private Mac copy and nested archives. Separate stage uses verified bundled commits/LFS assets, isolated ARM build and native tests/transitions/Card pipeline; vehicle devices masked, private params/network, live install read-only. Preparation keeps firmware/launchers and self-contained git objects. Atomic whole-directory activation with rollback, ignition-off passive acceptance/settings/learned preservation, then user-confirmed ignition-on Park/disengaged passive check. No OS/firmware update or active ECU queries.
+
+Installer adapted from previously validated wheel-target package: exact stage suffix/prefix, selected class, new480-case actual-output transition screen, obsolete resume path removed. Never skip fresh validation or physical-state gates.

@@ -1,0 +1,23 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "branch": "codex/navigator-tracking-release",
+    "both_checkouts_clean": true,
+    "parent_pins_exact_child": true,
+    "minimal_and_full_mac_builds_pass": true,
+    "post_commit_builds_pass": true,
+    "panda_build_pass": true,
+    "integrated_transition_cases": 320,
+    "integrated_ipc_pass": true,
+    "scoped_lint_pass": true,
+    "owner_1_20_0_97_and_geometry_unchanged": true,
+    "roll_mapping_default_off": true,
+    "committed_source_matches_staged_control_semantics": true,
+    "new_515_segment_replay_this_stage": false,
+    "prior_staged_515_segment_evidence_retained": true,
+    "native_safety_mode": "Existing unsanitized Mac debug library; no UBSan claim",
+    "comma_contacted": false,
+    "pushed": false,
+    "limits": "Mac build/test/IPC and local Panda compilation; no AGNOS/Chestnut runtime, firmware flashing or road validation."
+  }
+}

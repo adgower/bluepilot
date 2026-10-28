@@ -1,0 +1,13 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "verification_passed": true,
+    "runtime_changes": false,
+    "device_access_or_changes": false,
+    "owner_1_20_0_97_preserved": true,
+    "restart_diagnosis_tests": 5,
+    "restart_shadow_synthetic_native_cases": 18,
+    "restart_runtime_candidate_selected": false,
+    "physical_improvement_established": false
+  }
+}

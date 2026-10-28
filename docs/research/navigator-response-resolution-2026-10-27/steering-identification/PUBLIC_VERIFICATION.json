@@ -1,0 +1,23 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "verified": true,
+    "scope": "Original commanded-CAN\u2192reported ECU pinion-angle prediction/retrodiction; not physical steering ground truth or causal actuator identification",
+    "original_segments_targeted": 100,
+    "original_sessions": 10,
+    "raw_sensor_frames": 535962,
+    "decoder_verified_against_DBC": true,
+    "qualified_label_and_past_feature_bindings_checked": 14694920,
+    "known_active_rejection_overlapping_case_instances": 0,
+    "post_inference_feature_instances": 0,
+    "new08_whole_session_held_out": true,
+    "controller_changed": false,
+    "validated_dual_prefix_provider": false,
+    "new_trim_response_observed": false,
+    "physical_G_or_delay_identified": false,
+    "no_body_yaw_derived_angle_label": true,
+    "sensor_internal_measurement_age_bounded": false,
+    "CS_actual_consumed_frame_identified": false,
+    "full_or_native_controller_replay_claimed": false
+  }
+}

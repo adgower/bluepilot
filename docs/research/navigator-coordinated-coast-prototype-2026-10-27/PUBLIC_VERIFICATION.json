@@ -1,0 +1,26 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "verification": "analysis_and_native_receipts_verified",
+    "candidate_acceptance": "CLEARS_SAVED_LOCAL_REPLAY_GATES_NOT_ROAD_VALIDATED",
+    "controller_segments": 216,
+    "complete_active_input_segments": 204,
+    "diagnostic_only_segments": 12,
+    "controller_callbacks": 625238,
+    "prototype_tests": 18,
+    "installed_contract_tests": 202,
+    "installed_contract_subtests": 20,
+    "sanitizer": false,
+    "sanitizer_note": "macOS denied UBSan dylib loading. Explicit local unsanitized native hooks passed; no sanitizer proof.",
+    "new_timeouts_vs_reference": 0,
+    "weaker_encoded_strong_target_samples": 0,
+    "maximum_weaker_encoded_mps2": 0.0,
+    "extra_brake_command_seconds": -14.129842270965128,
+    "producer_steps_audited": 1203463,
+    "changed_callbacks": 702,
+    "only_packet_change": "AccBrkDecel_B_Rq bit1 to0 while precharge remains requested",
+    "device_access": false,
+    "paired_source_unchanged": true,
+    "causal_physical_improvement_proved": false
+  }
+}

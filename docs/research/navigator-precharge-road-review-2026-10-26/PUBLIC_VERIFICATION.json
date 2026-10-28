@@ -1,0 +1,18 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "passed": true,
+    "raw_segments_rehashed": 37,
+    "exact_new_commit_sessions": 4,
+    "active_sessions": 2,
+    "all_decoded_streams_ordered": true,
+    "all_wire_metadata_callbacks_match": 70291,
+    "quantization_tolerance_mps2": 0.00501,
+    "qualified_active_s": 819.371164997021,
+    "precharge_only_s": 5.918268117005937,
+    "precharge_entries": 31,
+    "controls_mismatch_events": 0,
+    "coordination_faults": 0,
+    "source_or_settings_mutations": 0
+  }
+}

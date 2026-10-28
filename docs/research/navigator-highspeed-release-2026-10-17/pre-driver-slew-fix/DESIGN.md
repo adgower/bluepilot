@@ -1,0 +1,24 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+# Local resolution of wheel/body and slow-unwind blockers
+
+Scope: preserve the prior experiment and installed paired source; modify a new local research package. Keep 1.20/0.97, native Ford safety/range/slew, installed low-speed and 45 mph behavior. No device connection, installation, firmware, ECU queries, CAN transmission or branch publication.
+
+## Diagnosis and selected changes
+
+The old wheel-only reduction occurs at 14 samples with body response below 90% of instantaneous demand. Source-time matching does not explain all of them:11 remain below 90%. All 14 cross 90% of the frozen current target within 300 ms in a diagnostic future-sample inspection. Wheel/model-to-body disagreement is often transitional and lies within roughly 0.63 ofreported yaw std at the median; those stds are correlated estimates, not confidence intervals. No fixed yaw offset, steering ratio or inverse-response gain is identified by these samples. Future samples are excluded from the candidate consumer.
+
+**Body confirmation:** Require wheel excess plus currently arrived calibrated device motion. Keep source timestamp, event receipt timestamp and consumption timestamp distinct; enforce source≤receipt≤now, both ages≤100 ms, valid event/angular sensor/input/posenet/calibration status, finite yaw/std and std≤0.03 rad/s. This std limit is an engineering sanity bound, not statistical confidence. Require current signed body acceleration excess>max(0.1 m/s²,10% ofrequested acceleration) and the same excess in a causal history median, at least 3 unique source samples spanning 80 ms, no older than 300 ms. Duplicates cannot manufacture history. Out-of-order/future/invalid motion aborts correction. Calibration invalidation immediately revokes cached motion; recovery needs a new motion sample and a fresh history generation.
+
+**Unwind:** The old six-frame rolling peak forgot continuous 1%/frame demand decline. Retain an episode peak after correction has first been admitted; use a causal 3-sample median so one target blip does not latch the rest of a curve. More than 10% filtered cumulative retreat latches correction off; more than 20% raw retreat aborts immediately. The causal median can delay slow-withdrawal detection one frame (50 ms at normal cadence); it never forgets cumulative decline.
+
+A lower plateau cannot rearm. Valid neutral demand (<0.25 m/s²), speed≤60 mph, direction change or disengagement can start a new episode. Alternatively,5 consecutive fresh wheel/body-confirmed requests above 102% of the frozen retained peak establish genuinely new rising demand; normal onset persistence must then restart. Invalid or stale state/control/calibration evidence cannot clear a latch or count toward rearming. Final output must rejoin the installed reference before added correction can rearm.
+
+**Inherited bounds:** New onset onlyabove 60 mph, smooth full weight 70 mph; gentle curvature full through 0.001/m and fades by 0.0015/m. Body admission is additional to all existing coherent atomic target/calibration/flags/freshness/lane-change/driver guards. Reduction-only cap 15% ofinstalled command magnitude and 0.01 rad; onset≤0.0003 rad/frame. Same-sign reduction envelope intersects the inherited final slew envelope; empty intersection is a hard offline failure. Shadow intent, fixed pinion model and owner factors remain unchanged. Default-off is exact installed strategy. Missing body inputs produce installed-reference behavior.
+
+## Validation and limits
+
+Test original regressions red→green, including real message adapter, invalid cached calibration, invalid reset evidence, source ordering/history, slow cumulative decline, lower plateau, above-peak rearm and driver/abort sweeps. Replay all 28 sessions / 540 segments with physical RX and unmodified native safety hooks, original atomic packets and separately labelled past-only synthetic calibration fixtures. Also compare exact recorded send timestamps and replace only selected path bits/checksum in memory for native replay. All workers verify identical unchanged source hashes.
+
+Acceptance requires zero new native rejects, preservation below 60 mph/40–50 mph and disabled behavior, no changed output on all 14 original counterexamples, no new measured body-under-response counterexamples on retained latest-route diagnostics, and some confirmed mitigation of the reported 83 mph bend. It does not require maximizing changed-frame coverage or pretending every frame should be reduced.
+
+Local guard acceptance is distinct from vehicle response, latent true yaw calibration, production integration, physical actuation and road readiness. More restrictive admission deliberately reduces intervention coverage. No counterfactual vehicle motion is inferred by scaling the saved response.

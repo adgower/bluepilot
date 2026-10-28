@@ -1,0 +1,12 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+# Separate basis/receipt contract revision
+
+The frozen parent21segment result is preserved. This revision fixes the demonstrated reference-basis bug and adds explicit unsupported moving-reference/receive-identity behavior; it integrates no fitted actuator model.
+
+`response.py` retains live atomic target plus a fixed-trial-curvature angle basis. The0.5degconsistency check uses the latter, so the three exact saved producer snapshots with ordinary1.60–3.68%requested-curvature motion stay WAIT instead of falsely failing provenance. It latches the entire post-generated raw target and nominal-wire trajectory; net cancellation does not clear that latch. When moving-reference response lacks a validated dual-prefix envelope, it stays WAIT and reaches lease withdrawal/raw-episode lockout. There is no provider capability boolean or fit-RMSE shortcut.
+
+`AngleReceipt(received_ns,quality,value_deg)` is an explicit research-only value binding. Missing receipt cannot authorize a fixed-reference association. QFmust be3, receive time no later than the carState snapshot, receipt age≤40ms, value match within half nominal ECUquantum, and association receipt strictly newer than the completed generated action. This is CANreceive identity, **not ECUinternal physical sampling time**; unknown sample/filter lag still requires a supported model/source-margin contract. `state_ns`continues to mean carStatepublication; `motion_ns`is deviceMotionestimate source time. No current production transport field is invented.
+
+Only synthetic helpers supply their explicitly known instantaneous receipt. A raw replay adapter would need original0x7eCANreceive/QF/value metadata bound to the carState value before this revision can make a stronger received-response statement. No such adapter/model is silently supplied here.
+
+`test_contract.py`regresses the three exact saved atomic snapshots, moving rising/unwinding stationary/wrong/apparently responsive signals with absent envelope, genuine calibration-basis drift, nominal-wire out-and-back history, and fixed-reference positive/negative receipt controls. Against the frozen prior core,12fail and1passes; this revision passes14checks(including a malformed-angle/valid-receipt fail-closed regression). The fixed-reference positive is algorithm plumbing under a synthetic known receipt, not road/actuator validation. No new focused or full replay has run.

@@ -1,0 +1,20 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "status": "LOCAL_PAIRED_INTEGRATION_BUILD_REPLAY_COMPLETE",
+    "exact_gitlink": true,
+    "clean_pair": true,
+    "focused_tests": 29,
+    "minimal_and_full_mac_builds": true,
+    "panda_build": true,
+    "postcommit_head_builds": true,
+    "lint_whitespace": true,
+    "allocator_ast_equals_accepted_prototype": true,
+    "whole_pair_review": "no_substantive_findings",
+    "native_evidence": "reused_by_exact_wire_input_header_binary_equality_not_rerun_for_port",
+    "protected_settings_geometry_consumer_safety_and_steering_unchanged": true,
+    "published": false,
+    "device_access": false,
+    "ARM_model_startup_parked_road_validated": false
+  }
+}

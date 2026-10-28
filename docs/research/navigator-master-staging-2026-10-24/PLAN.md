@@ -1,0 +1,2 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+Backup current pair/settings privately on device and Mac. Separate exact-source stage; keep Alpha ON, no active-install/service/OS/firmware/vehicle output changes. Reviewed namespaces block vehicle interfaces. Run isolated full ARM build and retained tests, then verify new model initialization/inference with no ECU access. Candidate remains inactive pending those gates. Preserve 1.20/0.97.

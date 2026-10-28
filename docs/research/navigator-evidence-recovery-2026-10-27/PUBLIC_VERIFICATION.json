@@ -1,0 +1,11 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "artifact_and_source_checks_passed": true,
+    "artifact_count": 78,
+    "controller_blockers_resolved": false,
+    "device_contact": false,
+    "paired_source_unchanged": true,
+    "previous_verification_unchanged": true
+  }
+}

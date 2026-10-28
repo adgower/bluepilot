@@ -1,0 +1,2 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+Complete: published, backed up on device/Mac, full ARM/native/restart checks passed, activated with whole-install rollback retained. Offroad and settled powered Alpha stationary Park acceptance passed. Final audit passed. 1.20/0.97/settings retained. Road validation pending. See REPORT.md.

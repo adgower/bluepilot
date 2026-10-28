@@ -1,0 +1,20 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "inactive_staging_passed": true,
+    "candidate_parent": "e05e42f43d2907a4f02915a924cfd95a46197e79",
+    "candidate_child": "5097b993965b2b65ea3fcca7e3769cfa9403d49c",
+    "active_parent": "df788e02719c05595dab2f980e6fd9fb9e464006",
+    "active_child": "1d29e6e78abcbf5c6a80eb397d80b349c6cca960",
+    "published_and_remote_verified": true,
+    "arm_build_and_tests_passed": true,
+    "passed_testcases": 1304,
+    "skipped_testcases": 79,
+    "current_alpha": "1",
+    "active_install_settings_calibration_firmware_service_preserved": true,
+    "candidate_activated": false,
+    "fresh_full_route_native_replay": false,
+    "candidate_powered_or_road_validation": false,
+    "physical_pulsing_improvement_established": false
+  }
+}

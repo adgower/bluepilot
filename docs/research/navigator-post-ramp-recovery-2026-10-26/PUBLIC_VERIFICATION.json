@@ -1,0 +1,15 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "decision": "rejected_controller_gates",
+    "focused_tests": 91,
+    "full_controller_segments": 197,
+    "callbacks": 570269,
+    "native_binary_and_headers_match": true,
+    "controller_source_bindings_match": true,
+    "paired_clean": true,
+    "steering": "1.20/0.97 unchanged",
+    "device_access": false,
+    "hardware_validation": false
+  }
+}

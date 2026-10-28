@@ -1,0 +1,14 @@
+{
+  "curation_notice": "Selected scalar outcomes from the local verification receipt; not the full original artifact/hash manifest. Private originals and inputs are intentionally omitted.",
+  "outcomes": {
+    "steady_samples": 3244,
+    "steady_seconds": 162.20000000000002,
+    "qualifying_sessions": 10,
+    "fixed_roll_improves_measurement_MAE_sessions": 10,
+    "pooled_measurement_MAE_reduction": 0.4724617565643523,
+    "decomposition_mean_identity_verified": true,
+    "existing_angle_target_model_match_verified": true,
+    "controller_map_changes": 0,
+    "device_access": false
+  }
+}

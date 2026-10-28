@@ -1,0 +1,2 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+Completed: exact pair published; fresh private device/Mac backup verified; separate ARM build/offline tests passed; clean self-contained inactive candidate prepared; final preservation audit passed. Active49be383b2/d459133a retained. Settings and1.20/.97 unchanged. No activation/service restart/OS/firmware/CAN changes. See REPORT.md.

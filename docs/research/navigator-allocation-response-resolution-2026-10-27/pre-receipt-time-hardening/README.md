@@ -1,0 +1,2 @@
+<!-- Public reference export: local identifiers/paths/times may be redacted; supporting private artifacts are intentionally omitted. -->
+Archived source snapshot from diagnostic contract development. Authoritative final receipt is ../newest-joint-candidate.json. Result paths in a source-only snapshot may be superseded; do not reuse them as final source-bound verification. The first pre-hardening snapshot has separately preserved private output copies.
