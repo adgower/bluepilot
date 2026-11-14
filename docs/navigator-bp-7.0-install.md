@@ -9,8 +9,10 @@ This branch is for the standard-wheelbase Navigator with the existing comma harn
 3. Choose **Custom Software** on the setup screen. On a comma 4, use **Slide to install custom software**, then follow the prompts to **Choose software**. Enter this address exactly:
 
    ```text
-   installer.comma.ai/adgower/bluepilot/bp-7.0-navigator
+   installer.comma.ai/adgower/bp-7.0-navigator
    ```
+
+   The installer uses the branch mirrored under Alex’s `openpilot` repository. The code is BluePilot 7.0.
 
 4. Wait for the download, first build, and any reboots to finish. Leave the device powered until the normal BluePilot home screen appears.
 
