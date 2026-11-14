@@ -355,6 +355,22 @@ struct CarControl {
   angularVelocity @14 :List(Float32);
   currentCurvature @17 :Float32;  # From vehicle model
 
+  navigatorCalibration @18 :NavigatorCalibration;
+
+  struct NavigatorCalibration {
+    valid @0 :Bool;
+    sourceMonoTime @1 :UInt64;
+    stateMonoTime @2 :UInt64;
+    computedMonoTime @3 :UInt64;
+    targetSpeed @4 :Float32;
+    roll @5 :Float32;
+    steerRatio @6 :Float32;
+    stiffnessFactor @7 :Float32;
+    angleOffsetDeg @8 :Float32;
+    requestedCurvature @9 :Float32;
+    targetAngleDeg @10 :Float32;
+  }
+
   cruiseControl @4 :CruiseControl;
   hudControl @5 :HUDControl;
 

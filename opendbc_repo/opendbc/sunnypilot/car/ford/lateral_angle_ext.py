@@ -32,8 +32,6 @@ resumed. Mode 0 is panda-clean by construction: every ford.h check has a legitim
 back in from zero through the soft ROC below (no jump seed) -- generous at human-turn speeds, and
 admitted by ford.h's path_angle ROC check (2% looser) without any bypass.
 """
-import time
-
 import numpy as np
 from numpy import clip, interp
 
@@ -42,7 +40,6 @@ from opendbc.car.lateral import apply_std_steer_angle_limits
 from opendbc.car.ford.values import CAR, CarControllerParams
 from opendbc.sunnypilot.car.ford.lateral_curv_ext import LateralResult
 from opendbc.sunnypilot.car.ford.human_turn import HumanTurnDetector
-from opendbc.sunnypilot.car.ford.navigator_unwind import NavigatorUnwind
 from opendbc.sunnypilot.car.ford.lane_center_trim import LaneCenterTrim
 from opendbc.sunnypilot.car.ford.values_ext import BP_ANGLE_LIMITS
 from selfdrive.modeld.constants import ModelConstants
@@ -151,7 +148,6 @@ def pscm_d_ref_m(v_ego_ms: float) -> float:
 
 class LateralAngleExt:
   def __init__(self, CP=None, CP_SP=None):
-    self.navigator_unwind = NavigatorUnwind() if CP is not None and CP.carFingerprint == CAR.LINCOLN_NAVIGATOR_MK4 else None
     # Predicted-curvature blend for path_angle: pred * b + desired * (1-b); b from ``FordPathAngleBlendRatio``
     self.path_angle_blend_ratio = _FORD_PATH_ANGLE_BLEND_RATIO_DEFAULT
     # Max extra VLT above t_base; from ``FordVLTExtraMax`` param
@@ -277,8 +273,6 @@ class LateralAngleExt:
     precision = 1
 
     if not CC.latActive:
-      if self.navigator_unwind is not None:
-        self.navigator_unwind.reset()
       self.path_angle_last = 0.0
       self.bp_path_angle_final = 0.0
       self.apply_curvature_last = 0.0
@@ -325,8 +319,6 @@ class LateralAngleExt:
     self.angle_human_turn_active = self.human_turn_detector.update(
       True, CS.out.steeringPressed, CS.out.steeringAngleDeg)
     if self.angle_human_turn_active:
-      if self.navigator_unwind is not None:
-        self.navigator_unwind.reset()
       self.path_angle_last = 0.0
       self.bp_path_angle_final = 0.0
       self.apply_curvature_last = 0.0
@@ -382,8 +374,6 @@ class LateralAngleExt:
     if self.stall_blip_frames_left > 0:
       self.stall_blip_frames_left -= 1
       self.angle_stall_blip_active = True
-      if self.navigator_unwind is not None:
-        self.navigator_unwind.reset()
       self.path_angle_last = 0.0
       self.bp_path_angle_final = 0.0
       self.apply_curvature_last = 0.0
@@ -538,16 +528,6 @@ class LateralAngleExt:
 
     path_angle_calc = kappa_cmd * v_ego * self.curvature_factor
     path_angle = path_angle_calc
-
-    # The Navigator reduction goes through the existing PSCM and wire-angle limits.
-    if self.navigator_unwind is not None:
-      if _pscm_lim >= 1 or _in_hard_sat or not self.sm.all_checks(['liveParameters']):
-        self.navigator_unwind.reset()
-      else:
-        params_age = (time.monotonic_ns() - self.sm.logMonoTime['liveParameters']) / 1e9
-        path_angle = self.navigator_unwind.update(
-          CS.out, kappa_cmd, path_angle, self.VM, self.lp, params_age, self.lane_change,
-        )
 
 
     # PSCM authority limit clamp.

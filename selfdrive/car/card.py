@@ -190,6 +190,14 @@ class Car:
     # card is driven by can recv, expected at 100Hz
     self.rk = Ratekeeper(100, print_delay_threshold=None)
 
+    # The Navigator tune consumes the standard model and built-in IMU streams.
+    self.navigator_trial = getattr(self.CI.CC, 'navigator_trial', None)
+    self.navigator_state_ns = 0
+    if self.navigator_trial is not None:
+      from openpilot.selfdrive.car.navigator_steering import NavigatorSteeringContext
+      self.navigator_context = NavigatorSteeringContext()
+      self.navigator_sm = messaging.SubMaster(['modelV2', 'livePose', 'liveCalibration'])
+
     # log fingerprint in sentry
     sunnypilot_interfaces.log_fingerprint(self.CP)
 
@@ -213,6 +221,9 @@ class Car:
     # Check for CAN timeout
     if not can_rcv_valid:
       self.can_rcv_cum_timeout_counter += 1
+
+    if self.navigator_trial is not None:
+      self.navigator_state_ns = messaging.log_from_bytes(can_strs[-1]).logMonoTime if can_rcv_valid else 0
 
     if can_rcv_valid and REPLAY:
       self.can_log_mono_time = messaging.log_from_bytes(can_strs[0]).logMonoTime
@@ -288,6 +299,10 @@ class Car:
     if self.sm.all_alive(['carControl']):
       # send car controls over can
       now_nanos = self.can_log_mono_time if REPLAY else int(time.monotonic() * 1e9)
+      if self.navigator_trial is not None:
+        self.navigator_sm.update(0)
+        self.navigator_context.feed(self.navigator_trial, self.navigator_sm, CC, CS, now_nanos, self.navigator_state_ns, REPLAY,
+                                    self.sm.logMonoTime['carControl'], self.sm.all_checks(['carControl']))
       self.last_actuators_output, can_sends = self.CI.apply(CC, convert_carControlSP(CC_SP), now_nanos)
       self.pm.send('sendcan', can_list_to_can_capnp(can_sends, msgtype='sendcan', valid=CS.canValid))
 

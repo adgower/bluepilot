@@ -1,15 +1,18 @@
 import math
 import numpy as np
+from opendbc.car.carlog import carlog
 from opendbc.can import CANPacker
 from opendbc.car import ACCELERATION_DUE_TO_GRAVITY, Bus, DT_CTRL, apply_hysteresis, structs
 from opendbc.car.lateral import AVERAGE_ROAD_ROLL, ISO_LATERAL_ACCEL, apply_std_steer_angle_limits
 from opendbc.car.ford import fordcan
+from opendbc.car.ford.lateral_angle import LateralAngle, _SOFT_ROC_SPEEDS, _SOFT_ROC_VALUES
+from opendbc.car.ford.lateral_angle_unwind_allocation import create_tracking_trial
 from opendbc.car.ford.values import CarControllerParams, FordFlags, CAR
 from opendbc.car.interfaces import CarControllerBase, V_CRUISE_MAX
 from openpilot.common.params import Params
 
 # BluePilot: extension imports for lateral, longitudinal, and HUD control
-from opendbc.sunnypilot.car.ford.lateral_curv_ext import LateralCurvExt, PrimaryLateralControl
+from opendbc.sunnypilot.car.ford.lateral_curv_ext import LateralCurvExt, LateralResult, PrimaryLateralControl
 from opendbc.sunnypilot.car.ford.lateral_angle_ext import LateralAngleExt
 from opendbc.sunnypilot.car.ford.longitudinal_ext import LongitudinalExt
 from opendbc.sunnypilot.car.ford.hud_ext import HudExt
@@ -82,6 +85,12 @@ class CarController(CarControllerBase, LateralCurvExt, LateralAngleExt, Longitud
     # ICBM: base class sets state used at runtime, init for robustness
     # IntelligentCruiseButtonManagementInterface.__init__(self, CP, CP_SP)
 
+    self.navigator_trial = create_tracking_trial(
+      CP, enabled=bool(self.bp_pinion_curvature_enabled and CP.flags & FordFlags.CANFD), curve_scope_enabled=True,
+    )
+    self.navigator_fallback = LateralAngle(CP) if self.navigator_trial is not None else None
+    self.navigator_trial_faulted = False
+    self.navigator_angle_active = False
     self.params = Params()
     self.packer = CANPacker(dbc_names[Bus.pt])
     self.CAN = fordcan.CanBus(CP)
@@ -95,8 +104,34 @@ class CarController(CarControllerBase, LateralCurvExt, LateralAngleExt, Longitud
     # Note: main_on_last, lkas_enabled_last, steer_alert_last, lead_distance_bars_last,
     # distance_bar_frame are initialized by HudExt.__init__() above
 
+  def update_navigator_angle(self, CC, CS, actuators):
+    # Keep a hot feedforward fallback so a trial invariant failure does not
+    # terminate card or produce a discontinuity in the wire angle.
+    fallback = self.navigator_fallback.update(CC, CS, actuators)
+    result = fallback
+    if not self.navigator_trial_faulted:
+      try:
+        result = self.navigator_trial.update(CC, CS, actuators)
+      except AssertionError:
+        self.navigator_trial_faulted = True
+        carlog.exception("Navigator wheel-target invariant failed; using base Angle steering until restart")
+
+    self.angle_human_turn_active = self.navigator_fallback.human_turn_active
+    self.angle_stall_blip_active = False
+    path_angle = 0.0
+    if CC.latActive and not self.angle_human_turn_active:
+      rate = float(np.interp(CS.out.vEgoRaw, _SOFT_ROC_SPEEDS, _SOFT_ROC_VALUES))
+      path_angle = float(np.clip(result.path_angle, self.path_angle_last - rate, self.path_angle_last + rate))
+    self.path_angle_last = self.bp_path_angle_final = path_angle
+    self.bp_kappa_cmd = result.shadow_curvature
+    self.bp_angle_rate_limited = abs(path_angle - result.path_angle) > 1e-9
+    self.bp_curvature_rate_limited = False
+    self.bp_curvature_deviation_limited = False
+    return LateralResult(0., 0., 0., path_angle, 2, 1, 0.)
+
   def update(self, CC, CC_SP, CS, now_nanos):
     can_sends = []
+    lka_msg_sent = False
 
     # BluePilot: update SubMaster (modelV2, liveParameters, selfdriveState, radarState) and vehicle model
     LateralCurvExt.update_sm(self)
@@ -139,10 +174,19 @@ class CarController(CarControllerBase, LateralCurvExt, LateralAngleExt, Longitud
     # BluePilot: keep stock lateral path in carcontroller, and run BP 4-signal lateral
     # only when bypass is disabled.
     if (self.frame % CarControllerParams.STEER_STEP) == 0:
-      current_curvature = -CS.out.yawRate / max(CS.out.vEgoRaw, 0.1)
       # BluePilot: bypass flag is owned by stock carcontroller path.
       bypass_bp_lat = self.disable_BP_lat_UI
+      navigator_angle = (self.navigator_trial is not None and not bypass_bp_lat
+                         and self.primary_lateral_control == PrimaryLateralControl.angle)
+      leaving_navigator_angle = self.navigator_angle_active and not navigator_angle
+      self.navigator_angle_active = navigator_angle
+      if leaving_navigator_angle:
+        # Retire the old tracking state after a live mode change. A parked
+        # restart reinitializes the trial after returning to Angle.
+        self.navigator_trial_faulted = True
       if bypass_bp_lat:
+        current_curvature = (self.navigator_fallback.get_current_curvature(CS) if self.navigator_fallback is not None
+                             else -CS.out.yawRate / max(CS.out.vEgoRaw, 0.1))
         # Stock curvature-only path only. Anti-overshoot is not used when BP lateral is active (disable_BP_lat_UI off).
         if self.CP.carFingerprint in (CAR.FORD_BRONCO_SPORT_MK1, CAR.FORD_F_150_MK14):
           self.anti_overshoot_curvature_last = anti_overshoot(actuators.curvature, self.anti_overshoot_curvature_last, CS.out.vEgoRaw)
@@ -167,7 +211,9 @@ class CarController(CarControllerBase, LateralCurvExt, LateralAngleExt, Longitud
         # Do not run apply_ford_curvature_limits here or overwrite apply_curvature_last before the
         # strategy runs. Panda rate-checks desired_curvature vs the last TX on the bus; that must match
         # the prior frame's lat.apply_curvature only (not an intermediate stock-limited value).
-        if self.primary_lateral_control == PrimaryLateralControl.angle:
+        if navigator_angle:
+          lat = self.update_navigator_angle(CC, CS, actuators)
+        elif self.primary_lateral_control == PrimaryLateralControl.angle:
           lat = LateralAngleExt.update_angle_strategy(self, CC, CS, actuators, self.CP)
         else:
           lat = LateralCurvExt.update(self, CC, CS, actuators, self.apply_curvature_last, self.CP)
@@ -197,6 +243,10 @@ class CarController(CarControllerBase, LateralCurvExt, LateralAngleExt, Longitud
         if self.CP.flags & FordFlags.CANFD:
           mode = 1 if lat_active else 0
           counter = (self.frame // CarControllerParams.STEER_STEP) % 0x10
+          if navigator_angle and lat_active:
+            # Panda must see this tick's pinion-based steering intent before LMC2.
+            can_sends.append(fordcan_ext.create_lka_msg(self.packer, self.CAN, True, hud_control, True, -self.bp_kappa_cmd))
+            lka_msg_sent = True
           can_sends.append(fordcan_ext.create_lat_ctl2_msg(
             self.packer, self.CAN, mode, lat.ramp_type, lat.precision_type,
             -lat.path_offset, -lat.path_angle, -lat.apply_curvature, -lat.curvature_rate, counter
@@ -208,7 +258,7 @@ class CarController(CarControllerBase, LateralCurvExt, LateralAngleExt, Longitud
           ))
 
     # send lka msg at 33Hz
-    if (self.frame % CarControllerParams.LKA_STEP) == 0:
+    if not lka_msg_sent and (self.frame % CarControllerParams.LKA_STEP) == 0:
       # BluePilot: tell ford.h whether angle mode is engaged, out-of-band from LMC/LMC2, packed into
       # Lane_Assist_Data1's unused bits (read synchronously in ford_tx_hook, no separate CAN ID/RX
       # needed). bypass_bp_lat means BP lateral is off entirely, so angle mode can't be engaged then.

@@ -205,7 +205,7 @@ class CAR(Platforms):
   LINCOLN_NAVIGATOR_MK4 = FordCANFDPlatformConfig(
     [FordCarDocs("Lincoln Navigator 2022-23", "Lincoln Co-Pilot360 2.0")],
     # Standard-wheelbase Navigator. The Navigator L has a longer wheelbase.
-    CarSpecs(mass=2742, wheelbase=3.1115, steerRatio=19.6),
+    CarSpecs(mass=2742, wheelbase=3.1115, steerRatio=19.6, centerToFrontRatio=0.44),
   )
   FORD_F_150_MK14 = FordCANFDPlatformConfig(
     [FordCarDocs("Ford F-150 2021-23", "Co-Pilot360 Assist 2.0", hybrid=True)],

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import math
+import time
 from numbers import Number
 
 from cereal import car, log
@@ -10,6 +11,8 @@ from openpilot.common.realtime import config_realtime_process, DT_CTRL, Priority
 from openpilot.common.swaglog import cloudlog
 
 from opendbc.car.car_helpers import interfaces
+from opendbc.car.ford.values import CAR
+from openpilot.selfdrive.car.navigator_calibration import stamp_calibration
 from opendbc.car.vehicle_model import VehicleModel
 from openpilot.selfdrive.controls.lib.drive_helpers import clip_curvature
 from openpilot.selfdrive.controls.lib.latcontrol import LatControl
@@ -157,6 +160,16 @@ class Controls(ControlsExt):
       if not math.isfinite(attr):
         cloudlog.error(f"actuators.{p} not finite {actuators.to_dict()}")
         setattr(actuators, p, 0.0)
+
+    if self.CP.carFingerprint == CAR.LINCOLN_NAVIGATOR_MK4:
+      # Ford's torque-controller output does not necessarily carry a wheel target.
+      # Publish the target for this exact planner curvature and learned geometry.
+      target = math.degrees(self.VM.get_steer_from_curvature(-actuators.curvature, CS.vEgo, lp.roll)) + lp.angleOffsetDeg
+      if math.isfinite(target):
+        actuators.steeringAngleDeg = target
+        stamp_calibration(CC, lp, now_ns=time.monotonic_ns(),
+                          source_ns=self.sm.logMonoTime['liveParameters'], state_ns=self.sm.logMonoTime['carState'],
+                          speed=CS.vEgo, valid=self.sm.all_checks(['liveParameters', 'carState']))
 
     return CC, lac_log
 

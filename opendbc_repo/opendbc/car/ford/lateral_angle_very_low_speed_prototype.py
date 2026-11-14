@@ -1,0 +1,31 @@
+"""Experimental Navigator trial selected by the existing startup low-speed option.
+
+A 10% feedforward sensitivity trial, not a validated vehicle calibration.
+All inherited clipping, rate bounds, shadow feedback and override remain active.
+"""
+from opendbc.car.ford.lateral_angle_low_speed_prototype import LowSpeedGainPrototype, smoothstep
+from opendbc.car.ford.values import CAR
+
+EXTRA_LOW_SPEED_GAIN = 0.10
+FADE_START_MPS = 15 * .44704
+FADE_END_MPS = 25 * .44704
+
+
+class VeryLowSpeedGainPrototype(LowSpeedGainPrototype):
+  def __init__(self, CP, *, enabled: bool = False):
+    super().__init__(CP)
+    self.very_low_speed_enabled = bool(enabled)
+
+  def get_curvature_factor(self, v_ego: float, kappa_cmd: float) -> float:
+    current = super().get_curvature_factor(v_ego, kappa_cmd)
+    if (not self.very_low_speed_enabled or self.CP.carFingerprint != CAR.LINCOLN_NAVIGATOR_MK4
+        or v_ego >= FADE_END_MPS):
+      return current
+    weight = 1. - smoothstep((v_ego - FADE_START_MPS) / (FADE_END_MPS - FADE_START_MPS))
+    return current * (1. + EXTRA_LOW_SPEED_GAIN * weight)
+
+
+def create_tracking_trial(CP, *, enabled=False):
+  """Construct the complete opt-in observer graph with temporal admission."""
+  from opendbc.car.ford.lateral_angle_midrange_admission import MidrangeAdmission
+  return MidrangeAdmission(CP, enabled=enabled)
