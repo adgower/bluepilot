@@ -10,7 +10,7 @@ from opendbc.car.carlog import carlog
 from opendbc.car.structs import CarParams
 from opendbc.car.ecu_addrs import get_ecu_addrs
 from opendbc.car.fingerprints import FW_VERSIONS
-from opendbc.car.fw_query_definitions import ESSENTIAL_ECUS, AddrType, EcuAddrBusType, FwQueryConfig, LiveFwVersions, OfflineFwVersions
+from opendbc.car.fw_query_definitions import ESSENTIAL_ECUS, AddrType, EcuAddrBusType, FwQueryConfig, LiveFwVersions, OfflineFwVersions, StdQueries
 from opendbc.car.interfaces import get_interface_attr
 from opendbc.car.isotp_parallel_query import IsoTpParallelQuery
 
@@ -19,6 +19,8 @@ FUZZY_EXCLUDE_ECUS = [Ecu.fwdCamera, Ecu.fwdRadar, Ecu.eps, Ecu.debug]
 
 FW_QUERY_CONFIGS: dict[str, FwQueryConfig] = get_interface_attr('FW_QUERY_CONFIG', ignore_none=True)
 VERSIONS = get_interface_attr('FW_VERSIONS', ignore_none=True)
+
+FW_VERSION_GROUPS = get_interface_attr('FW_VERSION_GROUPS', combine_brands=True, ignore_none=True)
 
 MODEL_TO_BRAND = {c: b for b, e in VERSIONS.items() for c in e}
 REQUESTS = [(brand, config, r) for brand, config in FW_QUERY_CONFIGS.items() for r in config.requests]
@@ -116,6 +118,12 @@ def match_fw_to_car_exact(live_fw_versions: LiveFwVersions, match_brand: str | N
 
   for candidate, fws in candidates.items():
     config = FW_QUERY_CONFIGS[MODEL_TO_BRAND[candidate]]
+    groups = FW_VERSION_GROUPS.get(candidate)
+    if groups and not any(all(version in live_fw_versions.get(ecu[1:], ()) for ecu, version in group.items())
+                          for group in groups):
+      invalid.add(candidate)
+      continue
+
     for ecu, expected_versions in fws.items():
       expected_versions = expected_versions + extra_fw_versions.get(candidate, {}).get(ecu, [])
       ecu_type = ecu[0]
@@ -163,6 +171,10 @@ def match_fw_to_car(fw_versions: list[CarParams.CarFw], vin: str, allow_exact: b
       config = FW_QUERY_CONFIGS[brand]
       if not exact_match and not len(matches) and config.match_fw_to_car_fuzzy is not None:
         matches |= config.match_fw_to_car_fuzzy(fw_versions_dict, vin, VERSIONS[brand])
+
+    # Platforms with required firmware groups must pass exact matching.
+    if not exact_match:
+      matches.difference_update(FW_VERSION_GROUPS)
 
     if len(matches):
       return exact_match, matches
@@ -296,7 +308,14 @@ def get_fw_versions(can_recv: CanRecvCallable, can_send: CanSendCallable, set_ob
                          (len(r.whitelist_ecus) == 0 or ecu_types[(b, a, s)] in r.whitelist_ecus)]
 
           if query_addrs:
-            query = IsoTpParallelQuery(can_send, can_recv, r.bus, query_addrs, r.request, r.response, r.rx_offset)
+            retry_busy_addrs = None
+            if (brand == 'ford' and r.bus == 0 and not r.logging
+                and r.request == [StdQueries.TESTER_PRESENT_REQUEST, StdQueries.MANUFACTURER_SOFTWARE_VERSION_REQUEST]):
+              eps = (0x730, None)
+              if eps in query_addrs and ecu_types.get((brand, *eps)) == Ecu.eps:
+                retry_busy_addrs = {eps}
+            query = IsoTpParallelQuery(can_send, can_recv, r.bus, query_addrs, r.request, r.response, r.rx_offset,
+                                       retry_busy_addrs=retry_busy_addrs)
             for (tx_addr, sub_addr), version in query.get_data(timeout).items():
               f = CarParams.CarFw()
 
